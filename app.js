@@ -1100,79 +1100,83 @@ document.addEventListener('DOMContentLoaded', () => {
   // EXPORT EXCEL DATA (CSV GENERATOR WITH BOM SUPPORT)
   // ==========================================================================
 
-  exportCsvBtn.addEventListener('click', () => {
-    if (responses.length === 0) {
-      alert('Nenhum dado para exportar.');
-      return;
-    }
+  if (exportCsvBtn) {
+    exportCsvBtn.addEventListener('click', () => {
+      if (responses.length === 0) {
+        alert('Nenhum dado para exportar.');
+        return;
+      }
 
-    const headers = [
-      'ID', 'Data Hora', 'Loja', 'Frequência de Visita', 'Setores Utilizados',
-      'O que sente falta', 'Avaliação de Preços', 'Deseja ver mais de',
-      'Horário de preferência', 'Opinião Abastecimento', 'Produto comprado externo',
-      'Variedade Cervejas', 'Se importa com Promoções', 'Tipos de Promoções preferidas',
-      'Conveniente para saídas rápidas', 'Nota Geral (0-10)', 'Indicaria para condomínios',
-      'Deseja Gelados', 'Deseja Gelados Outros', 'Sugestões Livres'
-    ];
+      const headers = [
+        'ID', 'Data Hora', 'Loja', 'Frequência de Visita', 'Setores Utilizados',
+        'O que sente falta', 'Avaliação de Preços', 'Deseja ver mais de',
+        'Horário de preferência', 'Opinião Abastecimento', 'Produto comprado externo',
+        'Variedade Cervejas', 'Se importa com Promoções', 'Tipos de Promoções preferidas',
+        'Conveniente para saídas rápidas', 'Nota Geral (0-10)', 'Indicaria para condomínios',
+        'Deseja Gelados', 'Deseja Gelados Outros', 'Sugestões Livres'
+      ];
 
-    const rows = responses.map(r => [
-      r.id,
-      new Date(r.timestamp).toLocaleString('pt-BR'),
-      r.q1_store || '',
-      r.q2_freq || '',
-      (r.q3_sectors || []).join('; '),
-      r.q4_lack || '',
-      r.q5_prices || '',
-      (r.q6_see_more || []).join('; '),
-      r.q7_hour || '',
-      r.q8_supplied || '',
-      r.q9_external || '',
-      r.q10_beers || '',
-      r.q11_promo_interest || '',
-      (r.q12_promo_type || []).join('; '),
-      r.q13_convenient || '',
-      r.q14_rating !== undefined ? r.q14_rating : '',
-      r.q15_nps_recommend || '',
-      (r.q16_cold_items || []).join('; '),
-      r.q16_cold_other || '',
-      r.q17_feedback || ''
-    ]);
+      const rows = responses.map(r => [
+        r.id,
+        new Date(r.timestamp).toLocaleString('pt-BR'),
+        r.q1_store || '',
+        r.q2_freq || '',
+        (r.q3_sectors || []).join('; '),
+        r.q4_lack || '',
+        r.q5_prices || '',
+        (r.q6_see_more || []).join('; '),
+        r.q7_hour || '',
+        r.q8_supplied || '',
+        r.q9_external || '',
+        r.q10_beers || '',
+        r.q11_promo_interest || '',
+        (r.q12_promo_type || []).join('; '),
+        r.q13_convenient || '',
+        r.q14_rating !== undefined ? r.q14_rating : '',
+        r.q15_nps_recommend || '',
+        (r.q16_cold_items || []).join('; '),
+        r.q16_cold_other || '',
+        r.q17_feedback || ''
+      ]);
 
-    // CSV format assembly (semi-colon separated for Brazilian Excel standard compatibility)
-    let csvContent = headers.map(h => `"${h.replace(/"/g, '""')}"`).join(';') + '\r\n';
-    
-    rows.forEach(row => {
-      csvContent += row.map(val => {
-        const textVal = String(val);
-        return `"${textVal.replace(/"/g, '""')}"`;
-      }).join(';') + '\r\n';
+      // CSV format assembly (semi-colon separated for Brazilian Excel standard compatibility)
+      let csvContent = headers.map(h => `"${h.replace(/"/g, '""')}"`).join(';') + '\r\n';
+      
+      rows.forEach(row => {
+        csvContent += row.map(val => {
+          const textVal = String(val);
+          return `"${textVal.replace(/"/g, '""')}"`;
+        }).join(';') + '\r\n';
+      });
+
+      // Add UTF-8 BOM to ensure accents show up properly in Brazilian Excel
+      const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', `pesquisa_aero_market_24h_${Date.now()}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     });
-
-    // Add UTF-8 BOM to ensure accents show up properly in Brazilian Excel
-    const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    
-    const link = document.createElement('a');
-    link.setAttribute('href', url);
-    link.setAttribute('download', `pesquisa_aero_market_24h_${Date.now()}.csv`);
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  });
+  }
 
   // ==========================================================================
   // CLEAR DATABASE
   // ==========================================================================
 
-  clearDbBtn.addEventListener('click', () => {
-    if (confirm('Tem certeza de que deseja apagar permanentemente todas as respostas coletadas do sistema? Essa ação não pode ser desfeita.')) {
-      responses = [];
-      localStorage.removeItem('aero_market_responses');
-      renderDashboard();
-      alert('Banco de dados zerado com sucesso.');
-    }
-  });
+  if (clearDbBtn) {
+    clearDbBtn.addEventListener('click', () => {
+      if (confirm('Tem certeza de que deseja apagar permanentemente todas as respostas coletadas do sistema? Essa ação não pode ser desfeita.')) {
+        responses = [];
+        localStorage.removeItem('aero_market_responses');
+        renderDashboard();
+        alert('Banco de dados zerado com sucesso.');
+      }
+    });
+  }
 
   // ==========================================================================
   // THEME SWITCH TOGGLE LOGIC
