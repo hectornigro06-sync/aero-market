@@ -1659,10 +1659,11 @@ body.light-theme .filter-select option {
     padding: 0.75rem 1rem;
   }
 
-  /* Pull controls closer to the card */
+  /* Pull controls closer to the card and float comfortably above iOS bottom gestures/home indicator */
   .nav-controls {
     margin-top: 1rem;
     padding: 0.75rem 1rem;
+    margin-bottom: calc(env(safe-area-inset-bottom, 0px) + 2.25rem) !important;
   }
 
   /* Keep validation messages compact */
