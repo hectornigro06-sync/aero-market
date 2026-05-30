@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pesquisa Aero Market 24h 🚀</title>
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Ajude a melhorar o Aero Market 24h do seu condomínio. Sua opinião é muito importante e leva menos de 2 minutos.">
+  <meta name="theme-color" content="#0f172a">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Chart.js for Dashboard -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Custom Styling -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Floating Star & Nebula Background Elements -->
+  <div class="stars"></div>
+  <div class="nebula-purple"></div>
+  <div class="nebula-cyan"></div>
+
+  <!-- Header Section with Admin Access & Theme Toggle -->
+  <header class="app-header">
+    <div class="header-logo">
+      <img src="logo_aeromarket.png" alt="Aero Market 24h" class="header-logo-img">
+    </div>
+    <div class="header-actions">
+      <button id="theme-toggle-btn" class="header-btn" title="Alternar Tema">
+        <i data-lucide="sun"></i>
+      </button>
+      <button id="admin-trigger-btn" class="header-btn" title="Painel Administrativo">
+        <i data-lucide="settings"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN WRAPPER: Form View -->
+  <main id="form-view" class="active-view">
+    <!-- Progress Indicator -->
+    <div class="progress-container">
+      <div class="progress-bar-wrapper">
+        <div id="form-progress-bar" class="progress-bar-fill"></div>
+      </div>
+      <div class="progress-stats">
+        <span id="progress-percentage">0%</span>
+        <span id="progress-step-text">Pergunta 1 de 16</span>
+      </div>
+    </div>
+
+    <!-- Steps Container -->
+    <div id="form-container">
+      
+      <!-- STEP 0: Welcome Screen -->
+      <section class="step-card active" data-step="0">
+        <div class="welcome-box">
+          <div class="welcome-logo-wrapper">
+            <img src="logo_aeromarket.png" alt="Aero Market 24h" class="welcome-logo-img">
+          </div>
+          <div class="badge-anonymous">
+            <i data-lucide="shield-check"></i>
+            Pesquisa 100% Anônima
+          </div>
+          <h1>Ajude a melhorar o Aero Market 24h do condomínio 🚀</h1>
+          <p class="welcome-text">
+            “Queremos deixar o minimercado cada vez mais completo, com preços justos, novidades e produtos que realmente fazem sentido para os moradores. Sua opinião é muito importante e leva menos de 2 minutos.”
+          </p>
+          <div class="welcome-features">
+            <div class="feat-item">
+              <i data-lucide="clock"></i>
+              <span>Rápido (~2 min)</span>
+            </div>
+            <div class="feat-item">
+              <i data-lucide="thumbs-up"></i>
+              <span>Direto ao ponto</span>
+            </div>
+            <div class="feat-item">
+              <i data-lucide="sparkles"></i>
+              <span>Opinião sincera</span>
+            </div>
+          </div>
+          <button type="button" id="start-survey-btn" class="btn btn-primary btn-lg">
+            <span>Iniciar Pesquisa</span>
+            <i data-lucide="arrow-right"></i>
+          </button>
+        </div>
+      </section>
+
+      <!-- STEP 1: Loja -->
+      <section class="step-card" data-step="1">
+        <div class="question-header">
+          <span class="question-num">01 / 17</span>
+          <h2>Qual loja do Aero Market 24h você está utilizando hoje?</h2>
+          <p class="question-sub">Selecione a loja correspondente ao seu condomínio</p>
+        </div>
+        <div class="options-grid col-2" data-type="single">
+          <button type="button" class="option-card" data-value="Acquarela">
+            <span class="card-icon">🏪</span>
+            <span class="card-text">Acquarela</span>
+          </button>
+          <button type="button" class="option-card" data-value="Barcas">
+            <span class="card-icon">🏪</span>
+            <span class="card-text">Barcas</span>
+          </button>
+          <button type="button" class="option-card" data-value="CHAS">
+            <span class="card-icon">🏪</span>
+            <span class="card-text">CHAS</span>
+          </button>
+          <button type="button" class="option-card" data-value="Jardine">
+            <span class="card-icon">🏪</span>
+            <span class="card-text">Jardine</span>
+          </button>
+          <button type="button" class="option-card" data-value="Serrambi 2">
+            <span class="card-icon">🏪</span>
+            <span class="card-text">Serrambi 2</span>
+          </button>
+          <button type="button" class="option-card" data-value="Ecoville 1">
+            <span class="card-icon">🏪</span>
+            <span class="card-text">Ecoville 1</span>
+          </button>
+          <button type="button" class="option-card" data-value="Sun Towers">
+            <span class="card-icon">🏪</span>
+            <span class="card-text">Sun Towers</span>
+          </button>
+        </div>
+        <div class="validation-msg">Por favor, selecione uma loja para começar a pesquisa.</div>
+      </section>
+
+      <!-- STEP 2: Frequência -->
+      <section class="step-card" data-step="2">
+        <div class="question-header">
+          <span class="question-num">02 / 17</span>
+          <h2>Com que frequência você compra no minimercado?</h2>
+        </div>
+        <div class="options-grid" data-type="single">
+          <button type="button" class="option-card" data-value="Todos os dias">
+            <span class="card-icon">⚡</span>
+            <span class="card-text">Todos os dias</span>
+          </button>
+          <button type="button" class="option-card" data-value="3 a 5 vezes por semana">
+            <span class="card-icon">📅</span>
+            <span class="card-text">3 a 5 vezes por semana</span>
+          </button>
+          <button type="button" class="option-card" data-value="1 a 2 vezes por semana">
+            <span class="card-icon">🛒</span>
+            <span class="card-text">1 a 2 vezes por semana</span>
+          </button>
+          <button type="button" class="option-card" data-value="Raramente">
+            <span class="card-icon">⏳</span>
+            <span class="card-text">Raramente</span>
+          </button>
+          <button type="button" class="option-card" data-value="Ainda não comprei">
+            <span class="card-icon">🔍</span>
+            <span class="card-text">Ainda não comprei</span>
+          </button>
+        </div>
+        <div class="validation-msg">Por favor, selecione uma opção antes de prosseguir.</div>
+      </section>
+
+      <!-- STEP 3: Setor mais utilizado -->
+      <section class="step-card" data-step="3">
+        <div class="question-header">
+          <span class="question-num">03 / 17</span>
+          <h2>Qual setor você mais utiliza?</h2>
+          <p class="question-sub">Pode selecionar mais de um setor se desejar</p>
+        </div>
+        <div class="options-grid" data-type="multiple">
+          <button type="button" class="option-card" data-value="Bebidas">
+            <span class="card-icon">🥤</span>
+            <span class="card-text">Bebidas (suco/refrigerante)</span>
+          </button>
+          <button type="button" class="option-card" data-value="Cervejas">
+            <span class="card-icon">🍺</span>
+            <span class="card-text">Cervejas</span>
+          </button>
+          <button type="button" class="option-card" data-value="Sorvetes">
+            <span class="card-icon">🍦</span>
+            <span class="card-text">Sorvetes</span>
+          </button>
+          <button type="button" class="option-card" data-value="Congelados">
+            <span class="card-icon">🍕</span>
+            <span class="card-text">Congelados</span>
+          </button>
+          <button type="button" class="option-card" data-value="Snacks">
+            <span class="card-icon">🍿</span>
+            <span class="card-text">Snacks / Salgadinhos</span>
+          </button>
+          <button type="button" class="option-card" data-value="Doces">
+            <span class="card-icon">🍫</span>
+            <span class="card-text">Doces / Chocolates</span>
+          </button>
+          <button type="button" class="option-card" data-value="Produtos básicos do dia a dia">
+            <span class="card-icon">🍞</span>
+            <span class="card-text">Produtos básicos (pão, etc)</span>
+          </button>
+          <button type="button" class="option-card" data-value="Higiene/Limpeza">
+            <span class="card-icon">🧼</span>
+            <span class="card-text">Higiene / Limpeza</span>
+          </button>
+        </div>
+        <div class="validation-msg">Por favor, selecione pelo menos uma opção.</div>
+      </section>
+
+      <!-- STEP 4: O que mais falta -->
+      <section class="step-card" data-step="4">
+        <div class="question-header">
+          <span class="question-num">04 / 17</span>
+          <h2>O que você sente que MAIS falta hoje na loja?</h2>
+          <p class="question-sub">Esta é uma das perguntas mais valiosas para melhorarmos as prateleiras.</p>
+        </div>
+        <div class="input-wrapper">
+          <textarea id="q3-lack" class="input-field" placeholder="Escreva aqui marcas, produtos ou categorias que você procura mas não encontra..." rows="4" maxlength="500"></textarea>
+        </div>
+        <div class="hint-text">Pressione Enter ou clique em avançar. Pode deixar em branco caso não lembre de nada.</div>
+      </section>
+
+      <!-- STEP 5: Preços -->
+      <section class="step-card" data-step="5">
+        <div class="question-header">
+          <span class="question-num">05 / 17</span>
+          <h2>Como você avalia os preços do minimercado?</h2>
+        </div>
+        <div class="options-grid col-2" data-type="single">
+          <button type="button" class="option-card border-success" data-value="Muito bons">
+            <span class="card-icon">💎</span>
+            <span class="card-text">Muito bons</span>
+          </button>
+          <button type="button" class="option-card border-primary" data-value="Justos">
+            <span class="card-icon">🤝</span>
+            <span class="card-text">Justos</span>
+          </button>
+          <button type="button" class="option-card border-warning" data-value="Um pouco altos">
+            <span class="card-icon">📈</span>
+            <span class="card-text">Um pouco altos</span>
+          </button>
+          <button type="button" class="option-card border-danger" data-value="Altos demais">
+            <span class="card-icon">⚠️</span>
+            <span class="card-text">Altos demais</span>
+          </button>
+        </div>
+        <div class="validation-msg">Por favor, selecione uma opção antes de prosseguir.</div>
+      </section>
+
+      <!-- STEP 6: Gostaria de ver mais -->
+      <section class="step-card" data-step="6">
+        <div class="question-header">
+          <span class="question-num">06 / 17</span>
+          <h2>Qual tipo de produto você gostaria de ver mais?</h2>
+          <p class="question-sub">Pode selecionar múltiplas opções</p>
+        </div>
+        <div class="options-grid" data-type="multiple">
+          <button type="button" class="option-card" data-value="Produtos fitness">
+            <span class="card-icon">💪</span>
+            <span class="card-text">Produtos fitness</span>
+          </button>
+          <button type="button" class="option-card" data-value="Congelados rápidos">
+            <span class="card-icon">🍳</span>
+            <span class="card-text">Congelados rápidos</span>
+          </button>
+          <button type="button" class="option-card" data-value="Bebidas geladas">
+            <span class="card-icon">❄️</span>
+            <span class="card-text">Bebidas geladas</span>
+          </button>
+          <button type="button" class="option-card" data-value="Cervejas especiais">
+            <span class="card-icon">🍻</span>
+            <span class="card-text">Cervejas especiais</span>
+          </button>
+          <button type="button" class="option-card" data-value="Produtos infantis">
+            <span class="card-icon">🧸</span>
+            <span class="card-text">Produtos infantis</span>
+          </button>
+          <button type="button" class="option-card" data-value="Café da manhã">
+            <span class="card-icon">☕</span>
+            <span class="card-text">Itens de café da manhã</span>
+          </button>
+          <button type="button" class="option-card" data-value="Doces e chocolates">
+            <span class="card-icon">🍬</span>
+            <span class="card-text">Doces e chocolates</span>
+          </button>
+          <button type="button" class="option-card" data-value="Produtos premium">
+            <span class="card-icon">👑</span>
+            <span class="card-text">Produtos premium</span>
+          </button>
+          <button type="button" class="option-card" data-value="Itens baratos do dia a dia">
+            <span class="card-icon">🏷️</span>
+            <span class="card-text">Itens baratos do dia a dia</span>
+          </button>
+        </div>
+        <div class="validation-msg">Por favor, selecione pelo menos uma opção.</div>
+      </section>
+
+      <!-- STEP 7: Horário de compra -->
+      <section class="step-card" data-step="7">
+        <div class="question-header">
+          <span class="question-num">07 / 17</span>
+          <h2>Você costuma comprar mais em qual horário?</h2>
+          <p class="question-sub">Esta resposta ajuda muito na inteligência de abastecimento da loja.</p>
+        </div>
+        <div class="options-grid col-2" data-type="single">
+          <button type="button" class="option-card" data-value="Manhã">
+            <span class="card-icon">🌅</span>
+            <span class="card-text">Manhã (06h às 12h)</span>
+          </button>
+          <button type="button" class="option-card" data-value="Tarde">
+            <span class="card-icon">☀️</span>
+            <span class="card-text">Tarde (12h às 18h)</span>
+          </button>
+          <button type="button" class="option-card" data-value="Noite">
+            <span class="card-icon">🌌</span>
+            <span class="card-text">Noite (18h às 00h)</span>
+          </button>
+          <button type="button" class="option-card" data-value="Madrugada">
+            <span class="card-icon">🦉</span>
+            <span class="card-text">Madrugada (00h às 06h)</span>
+          </button>
+        </div>
+        <div class="validation-msg">Por favor, selecione uma opção.</div>
+      </section>
+
+      <!-- STEP 8: Loja bem abastecida -->
+      <section class="step-card" data-step="8">
+        <div class="question-header">
+          <span class="question-num">08 / 17</span>
+          <h2>Você acha a loja bem abastecida?</h2>
+        </div>
+        <div class="options-grid" data-type="single">
+          <button type="button" class="option-card" data-value="Sempre">
+            <span class="card-icon">🟢</span>
+            <span class="card-text">Sempre cheia e organizada</span>
+          </button>
+          <button type="button" class="option-card" data-value="Na maioria das vezes">
+            <span class="card-icon">🟡</span>
+            <span class="card-text">Na maioria das vezes</span>
+          </button>
+          <button type="button" class="option-card" data-value="Às vezes faltam produtos">
+            <span class="card-icon">🟠</span>
+            <span class="card-text">Às vezes faltam produtos essenciais</span>
+          </button>
+          <button type="button" class="option-card" data-value="Frequentemente encontro produtos em falta">
+            <span class="card-icon">🔴</span>
+            <span class="card-text">Frequentemente encontro buracos nas gôndolas</span>
+          </button>
+        </div>
+        <div class="validation-msg">Por favor, selecione uma opção.</div>
+      </section>
+
+      <!-- STEP 9: Mercado externo -->
+      <section class="step-card" data-step="9">
+        <div class="question-header">
+          <span class="question-num">09 / 17</span>
+          <h2>Qual produto você mais compra no mercado externo e gostaria de encontrar aqui?</h2>
+          <p class="question-sub">Isso nos ajuda a evitar que você precise sair do condomínio.</p>
+        </div>
+        <div class="input-wrapper">
+          <input type="text" id="q8-external" class="input-field" placeholder="Ex: Cerveja X, Pão de forma integral Y, Leite Z..." maxlength="150">
+        </div>
+        <div class="hint-text">Pressione Enter ou clique em avançar. Pode deixar em branco se preferir.</div>
+      </section>
+
+      <!-- STEP 10: Variedade cervejas -->
+      <section class="step-card" data-step="10">
+        <div class="question-header">
+          <span class="question-num">10 / 17</span>
+          <h2>Como você avalia a variedade de cervejas?</h2>
+        </div>
+        <div class="options-grid col-2" data-type="single">
+          <button type="button" class="option-card" data-value="Excelente">
+            <span class="card-icon">🤩</span>
+            <span class="card-text">Excelente</span>
+          </button>
+          <button type="button" class="option-card" data-value="Boa">
+            <span class="card-icon">🙂</span>
+            <span class="card-text">Boa</span>
+          </button>
+          <button type="button" class="option-card" data-value="Pode melhorar">
+            <span class="card-icon">😐</span>
+            <span class="card-text">Pode melhorar</span>
+          </button>
+          <button type="button" class="option-card" data-value="Fraca">
+            <span class="card-icon">😞</span>
+            <span class="card-text">Fraca / Não atende</span>
+          </button>
+        </div>
+        <div class="validation-msg">Por favor, selecione uma opção.</div>
+      </section>
+
+      <!-- STEP 11: Compraria mais com promoções -->
+      <section class="step-card" data-step="11">
+        <div class="question-header">
+          <span class="question-num">11 / 17</span>
+          <h2>Você compraria mais se houvesse promoções semanais?</h2>
+        </div>
+        <div class="options-grid col-3" data-type="single">
+          <button type="button" class="option-card" data-value="Sim">
+            <span class="card-icon">👍</span>
+            <span class="card-text">Sim, com certeza</span>
+          </button>
+          <button type="button" class="option-card" data-value="Talvez">
+            <span class="card-icon">🤷</span>
+            <span class="card-text">Talvez</span>
+          </button>
+          <button type="button" class="option-card" data-value="Não faz diferença">
+            <span class="card-icon">👎</span>
+            <span class="card-text">Não faz diferença</span>
+          </button>
+        </div>
+        <div class="validation-msg">Por favor, selecione uma opção.</div>
+      </section>
+
+      <!-- STEP 12: Promoção que chama mais atenção -->
+      <section class="step-card" data-step="12">
+        <div class="question-header">
+          <span class="question-num">12 / 17</span>
+          <h2>Qual promoção chamaria mais sua atenção?</h2>
+          <p class="question-sub">Pode selecionar múltiplas opções</p>
+        </div>
+        <div class="options-grid" data-type="multiple">
+          <button type="button" class="option-card" data-value="Combo cerveja + snack">
+            <span class="card-icon">🍺🍿</span>
+            <span class="card-text">Combo Cerveja + Snack</span>
+          </button>
+          <button type="button" class="option-card" data-value="Desconto progressivo">
+            <span class="card-icon">📉</span>
+            <span class="card-text">Desconto Progressivo (Leve + Pague -)</span>
+          </button>
+          <button type="button" class="option-card" data-value="Promoção relâmpago">
+            <span class="card-icon">⚡</span>
+            <span class="card-text">Promoção Relâmpago (Avisos rápidos)</span>
+          </button>
+          <button type="button" class="option-card" data-value="Produtos do dia">
+            <span class="card-icon">📆</span>
+            <span class="card-text">Produtos do Dia da Semana</span>
+          </button>
+          <button type="button" class="option-card" data-value="Combos família">
+            <span class="card-icon">👨‍👩‍👧</span>
+            <span class="card-text">Combos Família (Maiores embalagens)</span>
+          </button>
+          <button type="button" class="option-card" data-value="Sorvete em promoção">
+            <span class="card-icon">🍦</span>
+            <span class="card-text">Sorvete em Promoção</span>
+          </button>
+        </div>
+        <div class="validation-msg">Por favor, selecione pelo menos uma opção.</div>
+      </section>
+
+      <!-- STEP 13: Conveniente para saídas rápidas -->
+      <section class="step-card" data-step="13">
+        <div class="question-header">
+          <span class="question-num">13 / 17</span>
+          <h2>Você considera o minimercado conveniente para evitar saídas rápidas?</h2>
+        </div>
+        <div class="options-grid col-2" data-type="single">
+          <button type="button" class="option-card" data-value="Sim, muito">
+            <span class="card-icon">💯</span>
+            <span class="card-text">Sim, extremamente conveniente</span>
+          </button>
+          <button type="button" class="option-card" data-value="Sim">
+            <span class="card-icon">✅</span>
+            <span class="card-text">Sim, ajuda bastante</span>
+          </button>
+          <button type="button" class="option-card" data-value="Mais ou menos">
+            <span class="card-icon">⚖️</span>
+            <span class="card-text">Mais ou menos</span>
+          </button>
+          <button type="button" class="option-card" data-value="Pouco">
+            <span class="card-icon">❌</span>
+            <span class="card-text">Pouco conveniente</span>
+          </button>
+        </div>
+        <div class="validation-msg">Por favor, selecione uma opção.</div>
+      </section>
+
+      <!-- STEP 14: Nota Geral -->
+      <section class="step-card" data-step="14">
+        <div class="question-header">
+          <span class="question-num">14 / 17</span>
+          <h2>Qual nota você dá hoje para o Aero Market 24h?</h2>
+          <p class="question-sub">Sua nota nos ajuda a calcular nosso indicador de satisfação geral (NPS)</p>
+        </div>
+        <div class="rating-bar-container">
+          <div class="rating-grid">
+            <button type="button" class="rating-btn btn-0" data-value="0">0</button>
+            <button type="button" class="rating-btn btn-1" data-value="1">1</button>
+            <button type="button" class="rating-btn btn-2" data-value="2">2</button>
+            <button type="button" class="rating-btn btn-3" data-value="3">3</button>
+            <button type="button" class="rating-btn btn-4" data-value="4">4</button>
+            <button type="button" class="rating-btn btn-5" data-value="5">5</button>
+            <button type="button" class="rating-btn btn-6" data-value="6">6</button>
+            <button type="button" class="rating-btn btn-7" data-value="7">7</button>
+            <button type="button" class="rating-btn btn-8" data-value="8">8</button>
+            <button type="button" class="rating-btn btn-9" data-value="9">9</button>
+            <button type="button" class="rating-btn btn-10" data-value="10">10</button>
+          </div>
+          <div class="rating-labels">
+            <span>Péssimo 😠</span>
+            <span>Razoável 😐</span>
+            <span>Excelente! 😍</span>
+          </div>
+        </div>
+        <div class="validation-msg">Por favor, selecione uma nota de 0 a 10.</div>
+      </section>
+
+      <!-- STEP 15: Indicaria -->
+      <section class="step-card" data-step="15">
+        <div class="question-header">
+          <span class="question-num">15 / 17</span>
+          <h2>Você indicaria o Aero Market 24h para outro condomínio?</h2>
+        </div>
+        <div class="options-grid col-3" data-type="single">
+          <button type="button" class="option-card" data-value="Sim">
+            <span class="card-icon">🤝</span>
+            <span class="card-text">Sim, com certeza</span>
+          </button>
+          <button type="button" class="option-card" data-value="Talvez">
+            <span class="card-icon">⚖️</span>
+            <span class="card-text">Talvez</span>
+          </button>
+          <button type="button" class="option-card" data-value="Não">
+            <span class="card-icon">❌</span>
+            <span class="card-text">Não indicaria</span>
+          </button>
+        </div>
+        <div class="validation-msg">Por favor, selecione uma opção.</div>
+      </section>
+
+      <!-- STEP 16: Produtos GELADOS (Q EXTRA) -->
+      <section class="step-card" data-step="16">
+        <div class="question-header">
+          <span class="question-num">16 / 17</span>
+          <h2>Quais produtos você gostaria de encontrar sempre GELADOS no refrigerador?</h2>
+          <p class="question-sub">Pode selecionar múltiplas opções</p>
+        </div>
+        <div class="options-grid" data-type="multiple">
+          <button type="button" class="option-card" data-value="Energético">
+            <span class="card-icon">⚡</span>
+            <span class="card-text">Energéticos</span>
+          </button>
+          <button type="button" class="option-card" data-value="Isotônico">
+            <span class="card-icon">🏃</span>
+            <span class="card-text">Isotônicos (Gatorade, etc)</span>
+          </button>
+          <button type="button" class="option-card" data-value="Água">
+            <span class="card-icon">💧</span>
+            <span class="card-text">Água com/sem gás</span>
+          </button>
+          <button type="button" class="option-card" data-value="Café gelado">
+            <span class="card-icon">🧋</span>
+            <span class="card-text">Cafés gelados (Prontos para beber)</span>
+          </button>
+          <button type="button" class="option-card" data-value="Refrigerante específico">
+            <span class="card-icon">🥤</span>
+            <span class="card-text">Refrigerantes em lata/garrafa</span>
+          </button>
+          <button type="button" class="option-card" data-value="Long necks">
+            <span class="card-icon">🍾</span>
+            <span class="card-text">Cervejas Long Neck</span>
+          </button>
+          <button type="button" class="option-card" data-value="Sobremesas">
+            <span class="card-icon">🍰</span>
+            <span class="card-text">Doces / Sobremesas geladas</span>
+          </button>
+        </div>
+        
+        <div class="input-wrapper" style="margin-top: 1.5rem;">
+          <input type="text" id="q15-cold-other" class="input-field" placeholder="Outro produto gelado? Escreva aqui..." maxlength="100">
+        </div>
+        <div class="validation-msg">Por favor, selecione pelo menos um ou digite na caixa acima.</div>
+      </section>
+
+      <!-- STEP 17: Sugestão livre -->
+      <section class="step-card" data-step="17">
+        <div class="question-header">
+          <span class="question-num">17 / 17</span>
+          <h2>Deixe uma sugestão livre para melhorar o Aero Market 24h</h2>
+          <p class="question-sub">Críticas, ideias, elogios, sugestões de funcionamento. Fique à vontade!</p>
+        </div>
+        <div class="input-wrapper">
+          <textarea id="q16-feedback" class="input-field" placeholder="Escreva aqui o que você gostaria de nos dizer..." rows="4" maxlength="1000"></textarea>
+        </div>
+        <div class="hint-text">Clique em "Enviar Pesquisa" para salvar. Suas respostas são anônimas.</div>
+      </section>
+
+      <!-- STEP 18: Sucesso / Thank You Screen -->
+      <section class="step-card" data-step="18">
+        <div class="success-box">
+          <div class="success-icon-wrapper">
+            <i data-lucide="check-circle-2" class="icon-success"></i>
+          </div>
+          <h1>Muito obrigado! 🎉</h1>
+          <p class="success-text">
+            Sua resposta foi enviada com sucesso de forma 100% anônima. Suas opiniões serão utilizadas para deixar o Aero Market 24h cada vez mais abastecido e ajustado para o condomínio.
+          </p>
+          <div class="success-actions">
+            <button type="button" id="restart-form-btn" class="btn btn-outline">
+              <i data-lucide="rotate-ccw"></i>
+              <span>Enviar Outra Resposta</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- Navigation Control Bar -->
+    <div id="navigation-controls" class="nav-controls">
+      <button type="button" id="prev-btn" class="btn btn-secondary disabled" disabled>
+        <i data-lucide="chevron-left"></i>
+        <span>Voltar</span>
+      </button>
+      <button type="button" id="next-btn" class="btn btn-primary">
+        <span>Avançar</span>
+        <i data-lucide="chevron-right"></i>
+      </button>
+    </div>
+  </main>
+
+  <!-- PASSWORD GATE MODAL FOR ADMIN PANEL -->
+  <div id="admin-gate-modal" class="modal-overlay">
+    <div class="modal-card">
+      <button class="modal-close" id="close-gate-btn"><i data-lucide="x"></i></button>
+      <div class="modal-header">
+        <i data-lucide="lock" class="modal-icon"></i>
+        <h3>Acesso Restrito</h3>
+        <p>Digite a senha administrativa para acessar o Dashboard.</p>
+      </div>
+      <div class="password-input-wrapper">
+        <div class="pin-display">
+          <span class="pin-dot"></span>
+          <span class="pin-dot"></span>
+          <span class="pin-dot"></span>
+          <span class="pin-dot"></span>
+        </div>
+        <input type="password" id="admin-pin-hidden" maxlength="4" readonly>
+      </div>
+      
+      <!-- Keypad Grid -->
+      <div class="keypad-grid">
+        <button class="key-btn" data-val="1">1</button>
+        <button class="key-btn" data-val="2">2</button>
+        <button class="key-btn" data-val="3">3</button>
+        <button class="key-btn" data-val="4">4</button>
+        <button class="key-btn" data-val="5">5</button>
+        <button class="key-btn" data-val="6">6</button>
+        <button class="key-btn" data-val="7">7</button>
+        <button class="key-btn" data-val="8">8</button>
+        <button class="key-btn" data-val="9">9</button>
+        <button class="key-btn text-btn" id="key-clear">Limpar</button>
+        <button class="key-btn" data-val="0">0</button>
+        <button class="key-btn key-action" id="key-submit">OK</button>
+      </div>
+      
+      <div class="pin-hint">Dica: A senha padrão é <strong>2424</strong></div>
+    </div>
+  </div>
+
+  <!-- ADMIN PANEL VIEW -->
+  <main id="admin-view" class="view-hidden">
+    <div class="admin-container">
+      
+      <!-- Admin Top Navigation -->
+      <div class="admin-top-bar">
+        <div class="admin-title">
+          <i data-lucide="layout-dashboard"></i>
+          <div>
+            <h2>Dashboard Administrativo <span id="sheets-sync-status" class="sync-badge">Carregando...</span></h2>
+            <p>Estatísticas das respostas coletadas do Aero Market 24h</p>
+          </div>
+        </div>
+        <div class="admin-top-actions">
+          <div class="admin-filter-wrapper">
+            <select id="store-filter-select" class="filter-select">
+              <option value="all">🏢 Todas as Lojas</option>
+              <option value="Acquarela">Acquarela</option>
+              <option value="Barcas">Barcas</option>
+              <option value="CHAS">CHAS</option>
+              <option value="Jardine">Jardine</option>
+              <option value="Serrambi 2">Serrambi 2</option>
+              <option value="Ecoville 1">Ecoville 1</option>
+              <option value="Sun Towers">Sun Towers</option>
+            </select>
+          </div>
+          <button id="inject-mock-btn" class="btn btn-outline-primary" title="Injeta 25 respostas aleatórias para ver o painel preenchido">
+            <i data-lucide="database"></i>
+            <span>Simular 25 Respostas</span>
+          </button>
+          <button id="export-csv-btn" class="btn btn-outline" title="Baixar dados em formato .csv compatível com Excel">
+            <i data-lucide="download"></i>
+            <span>Exportar Excel (CSV)</span>
+          </button>
+          <button id="clear-db-btn" class="btn btn-outline-danger" title="Limpar todas as respostas salvas">
+            <i data-lucide="trash-2"></i>
+            <span>Zerar Dados</span>
+          </button>
+          <button id="exit-admin-btn" class="btn btn-primary">
+            <i data-lucide="arrow-left"></i>
+            <span>Voltar ao Form</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Google Sheets Webhook Integration config -->
+      <div class="admin-config-card">
+        <div class="config-header" id="config-header-toggle">
+          <div class="config-title">
+            <i data-lucide="link-2"></i>
+            <span>Integração com o Google Planilhas</span>
+          </div>
+          <i data-lucide="chevron-down" class="config-chevron" id="config-chevron-icon"></i>
+        </div>
+        <div class="config-content-body collapsed" id="config-content-body">
+          <p class="config-desc">
+            Cole abaixo a URL do Web App gerada no seu script do Google Planilhas para salvar todas as respostas em tempo real de forma automática.
+          </p>
+          <div class="config-row">
+            <input type="url" id="webhook-url-input" class="input-field input-sm" placeholder="https://script.google.com/macros/s/.../exec">
+            <div class="config-buttons">
+              <button type="button" id="save-webhook-btn" class="btn btn-primary btn-sm">Salvar URL</button>
+              <button type="button" id="test-webhook-btn" class="btn btn-outline btn-sm">Testar Conexão</button>
+            </div>
+          </div>
+          <div id="webhook-status-msg" class="webhook-status"></div>
+        </div>
+      </div>
+
+      <!-- KPI Metrics Overview Grid -->
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-icon-box bg-indigo">
+            <i data-lucide="file-text"></i>
+          </div>
+          <div class="kpi-info">
+            <span class="kpi-label">Total de Respostas</span>
+            <h3 id="kpi-total-responses">0</h3>
+          </div>
+        </div>
+        
+        <div class="kpi-card">
+          <div class="kpi-icon-box" id="kpi-nps-color">
+            <i data-lucide="smile"></i>
+          </div>
+          <div class="kpi-info">
+            <span class="kpi-label">NPS (Net Promoter Score)</span>
+            <h3 id="kpi-nps">--</h3>
+            <span class="kpi-sub" id="kpi-nps-status">Sem dados suficientes</span>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon-box bg-emerald">
+            <i data-lucide="star"></i>
+          </div>
+          <div class="kpi-info">
+            <span class="kpi-label">Média das Notas</span>
+            <h3 id="kpi-avg-rating">0.0</h3>
+            <span class="kpi-sub">Escala de 0 a 10</span>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon-box bg-amber">
+            <i data-lucide="clock"></i>
+          </div>
+          <div class="kpi-info">
+            <span class="kpi-label">Horário de Pico</span>
+            <h3 id="kpi-peak-hour">--</h3>
+            <span class="kpi-sub">Período mais votado</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Charts Layout -->
+      <div class="charts-row">
+        <div class="chart-card card-half">
+          <div class="chart-header">
+            <h4>Frequência de Visitas</h4>
+          </div>
+          <div class="chart-canvas-wrapper">
+            <canvas id="chart-frequency"></canvas>
+          </div>
+        </div>
+        
+        <div class="chart-card card-half">
+          <div class="chart-header">
+            <h4>Avaliação de Preços</h4>
+          </div>
+          <div class="chart-canvas-wrapper">
+            <canvas id="chart-prices"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="charts-row">
+        <div class="chart-card card-third">
+          <div class="chart-header">
+            <h4>Abastecimento / Estoque</h4>
+          </div>
+          <div class="chart-canvas-wrapper">
+            <canvas id="chart-supply"></canvas>
+          </div>
+        </div>
+
+        <div class="chart-card card-third">
+          <div class="chart-header">
+            <h4>Variedade de Cervejas</h4>
+          </div>
+          <div class="chart-canvas-wrapper">
+            <canvas id="chart-beers"></canvas>
+          </div>
+        </div>
+
+        <div class="chart-card card-third">
+          <div class="chart-header">
+            <h4>Compraria mais com promoções?</h4>
+          </div>
+          <div class="chart-canvas-wrapper">
+            <canvas id="chart-promo-interest"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="charts-row">
+        <div class="chart-card card-half">
+          <div class="chart-header">
+            <h4>Setores Mais Utilizados</h4>
+          </div>
+          <div class="chart-canvas-wrapper">
+            <canvas id="chart-sectors"></canvas>
+          </div>
+        </div>
+
+        <div class="chart-card card-half">
+          <div class="chart-header">
+            <h4>Quais produtos gostariam de ver GELADOS?</h4>
+          </div>
+          <div class="chart-canvas-wrapper">
+            <canvas id="chart-cold-items"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Textual Feedback Sections -->
+      <div class="feedback-tabs-container">
+        <div class="tabs-header">
+          <button class="tab-btn active" data-target="tab-lack">
+            <i data-lucide="package-search"></i>
+            <span>Produtos em Falta</span>
+          </button>
+          <button class="tab-btn" data-target="tab-external">
+            <i data-lucide="shopping-bag"></i>
+            <span>Comprados Fora</span>
+          </button>
+          <button class="tab-btn" data-target="tab-feedback">
+            <i data-lucide="message-square"></i>
+            <span>Sugestões Livres</span>
+          </button>
+        </div>
+
+        <div class="tab-content active" id="tab-lack">
+          <div class="search-bar-wrapper">
+            <i data-lucide="search" class="search-icon"></i>
+            <input type="text" class="tab-search-input" placeholder="Filtrar produtos ou categorias em falta..." onkeyup="filterList('list-lack', this.value)">
+          </div>
+          <ul class="feedback-list" id="list-lack">
+            <li class="no-feedback">Nenhum registro encontrado.</li>
+          </ul>
+        </div>
+
+        <div class="tab-content" id="tab-external">
+          <div class="search-bar-wrapper">
+            <i data-lucide="search" class="search-icon"></i>
+            <input type="text" class="tab-search-input" placeholder="Filtrar itens comprados externamente..." onkeyup="filterList('list-external', this.value)">
+          </div>
+          <ul class="feedback-list" id="list-external">
+            <li class="no-feedback">Nenhum registro encontrado.</li>
+          </ul>
+        </div>
+
+        <div class="tab-content" id="tab-feedback">
+          <div class="search-bar-wrapper">
+            <i data-lucide="search" class="search-icon"></i>
+            <input type="text" class="tab-search-input" placeholder="Filtrar sugestões..." onkeyup="filterList('list-feedback', this.value)">
+          </div>
+          <ul class="feedback-list" id="list-feedback">
+            <li class="no-feedback">Nenhuma sugestão registrada ainda.</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
