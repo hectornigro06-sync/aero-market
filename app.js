@@ -112,13 +112,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // Scroll to the very top of the page so header/progress are visible
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    // Focus on first input if text screen (indices shifted due to wine questions)
-    if (stepIndex === 4) {
-      document.getElementById('q3-lack').focus();
-    } else if (stepIndex === 9) {
-      document.getElementById('q8-external').focus();
-    } else if (stepIndex === 18) {
-      document.getElementById('q16-feedback').focus();
+    // Focus on first input if text screen, but skip on mobile to prevent intrusive keyboard popup
+    const isMobile = window.innerWidth <= 768 || ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+    if (!isMobile) {
+      if (stepIndex === 4) {
+        document.getElementById('q3-lack').focus();
+      } else if (stepIndex === 9) {
+        document.getElementById('q8-external').focus();
+      } else if (stepIndex === 18) {
+        document.getElementById('q16-feedback').focus();
+      }
     }
 
     // Toggle class to hide progress & navigation in CSS as a fail-safe
@@ -224,7 +227,10 @@ document.addEventListener('DOMContentLoaded', () => {
             wrapper.classList.add('show');
             wrapper.style.display = 'block';
             setTimeout(() => {
-              document.getElementById('q8-favorites-other').focus();
+              const isMobile = window.innerWidth <= 768 || ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+              if (!isMobile) {
+                document.getElementById('q8-favorites-other').focus();
+              }
             }, 100);
           } else {
             wrapper.classList.remove('show');
@@ -260,17 +266,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const validationMsg = card.querySelector('.validation-msg');
       if (validationMsg) validationMsg.style.display = 'none';
 
-      // Auto-advance if all 4 aspects are rated!
-      const varietySelected = card.querySelector('.aspect-row[data-aspect="variety"] .aspect-choice-btn.selected');
-      const priceSelected = card.querySelector('.aspect-row[data-aspect="price"] .aspect-choice-btn.selected');
-      const organizationSelected = card.querySelector('.aspect-row[data-aspect="organization"] .aspect-choice-btn.selected');
-      const supplySelected = card.querySelector('.aspect-row[data-aspect="supply"] .aspect-choice-btn.selected');
-
-      if (varietySelected && priceSelected && organizationSelected && supplySelected) {
-        setTimeout(() => {
-          if (currentStep === 5) nextStep();
-        }, 400);
-      }
+      // Removed auto-advance; wait for click on next button
     });
   });
 
@@ -332,8 +328,8 @@ document.addEventListener('DOMContentLoaded', () => {
       return true;
     }
 
-    if (stepIndex === 15) {
-      // Rating Q15 (NPS 0-10 score)
+    if (stepIndex === 16) {
+      // Rating Q16 (NPS 0-10 score, was step 15)
       const selectedRating = card.querySelector('.rating-btn.selected');
       if (!selectedRating) {
         if (validationMsg) validationMsg.style.display = 'block';
@@ -345,8 +341,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const grid = card.querySelector('.options-grid');
     const selectedOptions = grid.querySelectorAll('.option-card.selected');
 
-    if (stepIndex === 17) {
-      // Gelados (Q17): selected cards
+    if (stepIndex === 12) {
+      // Gelados (Q12, was step 17): selected cards
       if (selectedOptions.length === 0) {
         if (validationMsg) validationMsg.style.display = 'block';
         return false;
@@ -411,23 +407,23 @@ document.addEventListener('DOMContentLoaded', () => {
       // Question 11: Preço habitual do vinho
       q11_wine_price: getSelectedValue(11),
       
-      // Question 12: Promoções semanais
-      q12_promo_interest: getSelectedValue(12),
+      // Question 12: Promoções semanais (now Step 13)
+      q12_promo_interest: getSelectedValue(13),
       
-      // Question 13: Tipo promoção
-      q13_promo_type: getSelectedValues(13),
+      // Question 13: Tipo promoção (now Step 14)
+      q13_promo_type: getSelectedValues(14),
       
-      // Question 14: Conveniente
-      q14_convenient: getSelectedValue(14),
+      // Question 14: Conveniente (now Step 15)
+      q14_convenient: getSelectedValue(15),
       
-      // Question 15: Nota
-      q15_rating: parseInt(document.querySelector('.step-card[data-step="15"] .rating-btn.selected').getAttribute('data-value')),
+      // Question 15: Nota (now Step 16)
+      q15_rating: parseInt(document.querySelector('.step-card[data-step="16"] .rating-btn.selected').getAttribute('data-value')),
       
-      // Question 16: Indicaria
-      q16_nps_recommend: getSelectedValue(16),
+      // Question 16: Indicaria (now Step 17)
+      q16_nps_recommend: getSelectedValue(17),
       
-      // Question 17: Gelados
-      q17_cold_items: getSelectedValues(17),
+      // Question 17: Gelados (now Step 12)
+      q17_cold_items: getSelectedValues(12),
       
       // Question 18: Sugestão livre
       q18_feedback: document.getElementById('q16-feedback').value.trim()
