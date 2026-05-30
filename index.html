@@ -510,10 +510,18 @@
             <span class="card-icon">🌹</span>
             <span class="card-text">Rosé</span>
           </button>
-          <button type="button" class="option-card" data-value="Outro">
+          <button type="button" class="option-card" data-value="Não consumo vinhos">
+            <span class="card-icon">❌</span>
+            <span class="card-text">Não consumo vinhos</span>
+          </button>
+          <button type="button" class="option-card" data-value="Outro" id="wine-other-card">
             <span class="card-icon">✏️</span>
             <span class="card-text">Outro</span>
           </button>
+        </div>
+        <!-- Conditionally displayed input for Outro tipo de vinho -->
+        <div id="wine-other-wrapper" class="textarea-animated-wrapper" style="display: none; margin-top: 1rem;">
+          <input type="text" id="q10-wine-other" class="input-field" placeholder="Escreva o tipo de vinho..." maxlength="150">
         </div>
         <div class="validation-msg">Por favor, selecione uma opção.</div>
       </section>
@@ -526,9 +534,9 @@
           <p class="question-sub">Escolha a faixa que mais se aproxima do seu consumo habitual.</p>
         </div>
         <div class="options-grid col-2" data-type="single">
-          <button type="button" class="option-card" data-value="Até R$20">
+          <button type="button" class="option-card" data-value="Não consumo vinhos">
             <span class="card-icon">🟢</span>
-            <span class="card-text">Até R$20</span>
+            <span class="card-text">Não consumo vinhos</span>
           </button>
           <button type="button" class="option-card" data-value="R$20 a R$30">
             <span class="card-icon">🔵</span>

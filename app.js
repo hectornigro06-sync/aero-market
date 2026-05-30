@@ -196,6 +196,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function prevStep() {
     if (currentStep > 1) {
+      if (currentStep === 12) {
+        const step10Val = getSelectedValue(10);
+        if (step10Val === 'Não consumo vinhos') {
+          currentStep = 10;
+          showStep(currentStep);
+          return;
+        }
+      }
       currentStep--;
       showStep(currentStep);
     }
@@ -242,8 +250,58 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       } else {
         // Single Select
+        
+        // Step 10: Special handling for "Outro" text box and "Não consumo vinhos" bypass
+        if (currentStep === 10) {
+          const wrapper = document.getElementById('wine-other-wrapper');
+          if (card.id === 'wine-other-card') {
+            grid.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+            
+            if (wrapper) {
+              wrapper.classList.add('show');
+              wrapper.style.display = 'block';
+            }
+            setTimeout(() => {
+              const isMobile = window.innerWidth <= 768 || ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+              if (!isMobile) {
+                const otherInput = document.getElementById('q10-wine-other');
+                if (otherInput) otherInput.focus();
+              }
+            }, 100);
+            return; // Prevent auto-advance
+          } else {
+            // Hide and clear other text input if another option is chosen
+            if (wrapper) {
+              wrapper.classList.remove('show');
+              wrapper.style.display = 'none';
+            }
+            const otherInput = document.getElementById('q10-wine-other');
+            if (otherInput) otherInput.value = '';
+          }
+        }
+
         grid.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
         card.classList.add('selected');
+        
+        // Smart bypass: if user selects "Não consumo vinhos" in step 10,
+        // auto-select "Não consumo vinhos" in step 11 and jump to step 12
+        if (currentStep === 10 && card.getAttribute('data-value') === 'Não consumo vinhos') {
+          const step11Card = document.querySelector('.step-card[data-step="11"]');
+          if (step11Card) {
+            step11Card.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+            const nonWinePriceOption = step11Card.querySelector('.option-card[data-value="Não consumo vinhos"]');
+            if (nonWinePriceOption) {
+              nonWinePriceOption.classList.add('selected');
+            }
+          }
+          
+          setTimeout(() => {
+            currentStep = 12; // Jump past step 11
+            showStep(currentStep);
+          }, 250);
+          return;
+        }
         
         // Auto-advance with small visual delay so user sees selection (250ms)
         setTimeout(() => {
@@ -328,6 +386,28 @@ document.addEventListener('DOMContentLoaded', () => {
       return true;
     }
 
+    if (stepIndex === 10) {
+      const selected = card.querySelector('.option-card.selected');
+      if (!selected) {
+        if (validationMsg) {
+          validationMsg.innerText = 'Por favor, selecione uma opção.';
+          validationMsg.style.display = 'block';
+        }
+        return false;
+      }
+      if (selected.id === 'wine-other-card') {
+        const otherInput = document.getElementById('q10-wine-other');
+        if (otherInput && otherInput.value.trim() === '') {
+          if (validationMsg) {
+            validationMsg.innerText = 'Por favor, digite o tipo de vinho no campo de texto.';
+            validationMsg.style.display = 'block';
+          }
+          return false;
+        }
+      }
+      return true;
+    }
+
     if (stepIndex === 16) {
       // Rating Q16 (NPS 0-10 score, was step 15)
       const selectedRating = card.querySelector('.rating-btn.selected');
@@ -393,7 +473,15 @@ document.addEventListener('DOMContentLoaded', () => {
       q9_external: document.getElementById('q8-external').value.trim(),
       
       // Question 10: Consumo de vinhos
-      q10_wine_type: getSelectedValue(10),
+      q10_wine_type: (() => {
+        const baseVal = getSelectedValue(10);
+        if (baseVal === 'Outro') {
+          const customInput = document.getElementById('q10-wine-other');
+          const custom = customInput ? customInput.value.trim() : '';
+          return custom ? `Outro (${custom})` : 'Outro';
+        }
+        return baseVal;
+      })(),
       
       // Question 11: Preço habitual do vinho
       q11_wine_price: getSelectedValue(11),
@@ -460,12 +548,21 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('q8-external').value = '';
     document.getElementById('q16-feedback').value = '';
     document.getElementById('q8-favorites-other').value = '';
+    const otherWineInput = document.getElementById('q10-wine-other');
+    if (otherWineInput) otherWineInput.value = '';
     
     // Reset Outros favorites sliding wrapper
     const favOtherWrapper = document.getElementById('favorites-other-wrapper');
     if (favOtherWrapper) {
       favOtherWrapper.classList.remove('show');
       favOtherWrapper.style.display = 'none';
+    }
+
+    // Reset other wine type sliding wrapper
+    const wineOtherWrapper = document.getElementById('wine-other-wrapper');
+    if (wineOtherWrapper) {
+      wineOtherWrapper.classList.remove('show');
+      wineOtherWrapper.style.display = 'none';
     }
     
     currentStep = 0;
@@ -919,14 +1016,38 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // D) Wine Type (Doughnut Chart)
-    const wineCounts = countValues(dataset, 'q10_wine_type');
+    const wineCounts = {};
+    dataset.forEach(item => {
+      let val = item.q10_wine_type;
+      if (val) {
+        if (val.startsWith('Outro')) {
+          val = 'Outro';
+        }
+        wineCounts[val] = (wineCounts[val] || 0) + 1;
+      }
+    });
+
+    const wineColorsMap = {
+      'Tinto': '#b91c1c',
+      'Branco': '#fef08a',
+      'Espumante Brut': '#e11d48',
+      'Espumante Moscatel': '#fb7185',
+      'Rosé': '#f472b6',
+      'Não consumo vinhos': '#64748b',
+      'Outro': '#94a3b8'
+    };
+
+    const wineLabels = Object.keys(wineCounts);
+    const wineData = Object.values(wineCounts);
+    const wineColors = wineLabels.map(label => wineColorsMap[label] || '#94a3b8');
+
     charts.beers = new Chart(document.getElementById('chart-beers'), {
       type: 'doughnut',
       data: {
-        labels: Object.keys(wineCounts),
+        labels: wineLabels,
         datasets: [{
-          data: Object.values(wineCounts),
-          backgroundColor: ['#b91c1c', '#fef08a', '#e11d48', '#fb7185', '#f472b6', '#94a3b8'],
+          data: wineData,
+          backgroundColor: wineColors,
           borderColor: isDark ? '#1e293b' : '#ffffff',
           borderWidth: 2
         }]
@@ -942,7 +1063,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // E) Wine Bottle Price (Vertical Bar Chart)
     const winePriceCounts = countValues(dataset, 'q11_wine_price');
-    const winePriceKeys = ['Até R$20', 'R$20 a R$30', 'R$30 a R$40', 'R$40 a R$50', 'R$50 a R$100', 'Acima de R$100'];
+    const winePriceKeys = ['Não consumo vinhos', 'R$20 a R$30', 'R$30 a R$40', 'R$40 a R$50', 'R$50 a R$100', 'Acima de R$100'];
     const winePriceValues = winePriceKeys.map(k => winePriceCounts[k] || 0);
     
     charts.winePrice = new Chart(document.getElementById('chart-wine-price'), {
@@ -952,7 +1073,7 @@ document.addEventListener('DOMContentLoaded', () => {
         datasets: [{
           label: 'Votos',
           data: winePriceValues,
-          backgroundColor: ['#10b981', '#6366f1', '#8b5cf6', '#f59e0b', '#fb923c', '#e11d48'],
+          backgroundColor: ['#64748b', '#6366f1', '#8b5cf6', '#f59e0b', '#fb923c', '#e11d48'],
           borderRadius: 8
         }]
       },
@@ -1139,8 +1260,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const seeMores = ['Produtos fitness', 'Congelados rápidos', 'Bebidas geladas', 'Cervejas especiais', 'Produtos infantis', 'Café da manhã', 'Doces e chocolates', 'Produtos premium', 'Itens baratos do dia a dia'];
     const hours = ['Manhã', 'Tarde', 'Noite', 'Madrugada'];
     const favoritesList = ['Dindim Gourmet', 'Marmitas congeladas', 'Pastel Dom Coutinho', 'Cacau Show', 'Batata Chips Caipira', 'Barra Whey Ovomaltine', 'Kinder Bueno', 'Pudim no Copo', 'Crepe'];
-    const wineTypesList = ['Tinto', 'Branco', 'Espumante Brut', 'Espumante Moscatel', 'Rosé', 'Outro'];
-    const winePricesList = ['Até R$20', 'R$20 a R$30', 'R$30 a R$40', 'R$40 a R$50', 'R$50 a R$100', 'Acima de R$100'];
+    const wineTypesList = ['Tinto', 'Branco', 'Espumante Brut', 'Espumante Moscatel', 'Rosé', 'Não consumo vinhos', 'Outro'];
+    const winePricesList = ['Não consumo vinhos', 'R$20 a R$30', 'R$30 a R$40', 'R$40 a R$50', 'R$50 a R$100', 'Acima de R$100'];
     const promosVal = ['Sim', 'Talvez', 'Não faz diferença'];
     const promoTypes = ['Combo cerveja + snack', 'Desconto progressivo', 'Promoção relâmpago', 'Produtos do dia', 'Combos família', 'Sorvete em promoção'];
     const convenients = ['Sim, muito', 'Sim', 'Mais ou menos', 'Pouco'];
@@ -1199,6 +1320,20 @@ document.addEventListener('DOMContentLoaded', () => {
         chosenFavorites.push('Outros');
       }
 
+      // Realistic Wine mock logic
+      const mockWineType = randomElement(wineTypesList);
+      let finalWineType = mockWineType;
+      let finalWinePrice = '';
+      if (mockWineType === 'Não consumo vinhos') {
+        finalWinePrice = 'Não consumo vinhos';
+      } else {
+        finalWinePrice = randomElement(winePricesList.filter(p => p !== 'Não consumo vinhos'));
+        if (mockWineType === 'Outro') {
+          const customWines = ['Cabernet', 'Malbec', 'Chardonnay', 'Merlot', 'Sauvignon Blanc'];
+          finalWineType = `Outro (${randomElement(customWines)})`;
+        }
+      }
+
       mockDataList.push({
         id: 'mock_' + Math.floor(Math.random() * 10000000),
         timestamp: respDate.toISOString(),
@@ -1220,8 +1355,8 @@ document.addEventListener('DOMContentLoaded', () => {
         q8_favorites_other: chosenFavorites.includes('Outros') ? 'Dindim sabor Coco Queimado' : '',
         
         q9_external: Math.random() > 0.5 ? randomElement(itemsCompradosFora) : '',
-        q10_wine_type: randomElement(wineTypesList),
-        q11_wine_price: randomElement(winePricesList),
+        q10_wine_type: finalWineType,
+        q11_wine_price: finalWinePrice,
         q12_promo_interest: randomElement(promosVal),
         q13_promo_type: chosenPromoType,
         q14_convenient: randomElement(convenients),
