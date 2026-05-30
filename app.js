@@ -4,14 +4,44 @@
    ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Safe Lucide helper to prevent crashes if CDN is delayed or blocked
+  function safeCreateIcons() {
+    try {
+      if (typeof lucide !== 'undefined' && lucide && typeof lucide.createIcons === 'function') {
+        lucide.createIcons();
+      }
+    } catch (err) {
+      console.warn('Erro ao processar Lucide Icons:', err);
+    }
+  }
+
   // Initialise Lucide Icons
-  lucide.createIcons();
+  safeCreateIcons();
 
   // APP STATE
   let currentStep = 0;
   const totalSteps = 18; // Questions from 1 to 18
-  let responses = JSON.parse(localStorage.getItem('aero_market_responses')) || [];
-  let theme = localStorage.getItem('aero_market_theme') || 'dark';
+  
+  // Safe localStorage loading to prevent crashes from corrupt browser cache
+  let responses = [];
+  try {
+    const stored = localStorage.getItem('aero_market_responses');
+    if (stored) {
+      responses = JSON.parse(stored);
+      if (!Array.isArray(responses)) responses = [];
+    }
+  } catch (err) {
+    console.error('Erro ao carregar respostas do localStorage:', err);
+    responses = [];
+  }
+
+  let theme = 'dark';
+  try {
+    theme = localStorage.getItem('aero_market_theme') || 'dark';
+  } catch (err) {
+    console.error('Erro ao carregar tema do localStorage:', err);
+    theme = 'dark';
+  }
 
   // Global Chart.js Instances (to destroy/rebuild on reload)
   let charts = {};
@@ -132,7 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       nextBtn.innerHTML = '<span>Avançar</span><i data-lucide="chevron-right"></i>';
     }
-    lucide.createIcons();
+    safeCreateIcons();
 
     // Hide validation messages when switching steps
     const activeCard = document.querySelector(`.step-card[data-step="${stepIndex}"]`);
@@ -610,7 +640,7 @@ document.addEventListener('DOMContentLoaded', () => {
       statusEl.innerHTML = '<i data-lucide="cloud-off"></i> Offline';
     }
     
-    lucide.createIcons();
+    safeCreateIcons();
   }
 
   function exitAdmin() {
@@ -1367,7 +1397,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       iconContainer.innerHTML = '<i data-lucide="sun"></i>';
     }
-    lucide.createIcons();
+    safeCreateIcons();
   }
 
   // ==========================================================================
@@ -1389,7 +1419,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Load URL on admin page load
   function loadWebhookUrl() {
-    const url = localStorage.getItem('aero_market_webhook_url') || DEFAULT_WEBHOOK_URL;
+    let url = DEFAULT_WEBHOOK_URL;
+    try {
+      url = localStorage.getItem('aero_market_webhook_url') || DEFAULT_WEBHOOK_URL;
+    } catch (err) {
+      console.error(err);
+    }
     webhookUrlInput.value = url;
   }
 
