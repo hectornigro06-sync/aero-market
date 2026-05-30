@@ -261,9 +261,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const selectedOptions = grid.querySelectorAll('.option-card.selected');
 
     if (stepIndex === 16) {
-      // Gelados (Q16): selected cards OR custom input text filled
-      const customInput = document.getElementById('q15-cold-other').value.trim();
-      if (selectedOptions.length === 0 && customInput === '') {
+      // Gelados (Q16): selected cards
+      if (selectedOptions.length === 0) {
         if (validationMsg) validationMsg.style.display = 'block';
         return false;
       }
@@ -335,7 +334,7 @@ document.addEventListener('DOMContentLoaded', () => {
       
       // Question 16: Gelados
       q16_cold_items: getSelectedValues(16),
-      q16_cold_other: document.getElementById('q15-cold-other').value.trim(),
+      q16_cold_other: '',
       
       // Question 17: Sugestão livre
       q17_feedback: document.getElementById('q16-feedback').value.trim()
@@ -378,7 +377,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Clear inputs
     document.getElementById('q3-lack').value = '';
     document.getElementById('q8-external').value = '';
-    document.getElementById('q15-cold-other').value = '';
     document.getElementById('q16-feedback').value = '';
     
     currentStep = 0;
