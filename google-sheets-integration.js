@@ -94,20 +94,24 @@ function doGet(e) {
       data.q2_freq = row[3];
       data.q3_sectors = row[4] ? String(row[4]).split("; ") : [];
       data.q4_lack = row[5];
-      data.q5_prices = row[6];
-      data.q6_see_more = row[7] ? String(row[7]).split("; ") : [];
-      data.q7_hour = row[8];
-      data.q8_supplied = row[9];
-      data.q9_external = row[10];
-      data.q10_beers = row[11];
-      data.q11_promo_interest = row[12];
-      data.q12_promo_type = row[13] ? String(row[13]).split("; ") : [];
-      data.q13_convenient = row[14];
-      data.q14_rating = row[15] !== "" ? Number(row[15]) : 0;
-      data.q15_nps_recommend = row[16];
-      data.q16_cold_items = row[17] ? String(row[17]).split("; ") : [];
-      data.q16_cold_other = row[18];
-      data.q17_feedback = row[19];
+      data.q5_aspect_variety = row[6] !== "" ? Number(row[6]) : "";
+      data.q5_aspect_price = row[7] !== "" ? Number(row[7]) : "";
+      data.q5_aspect_organization = row[8] !== "" ? Number(row[8]) : "";
+      data.q5_aspect_supply = row[9] !== "" ? Number(row[9]) : "";
+      data.q6_see_more = row[10] ? String(row[10]).split("; ") : [];
+      data.q7_hour = row[11];
+      data.q8_favorites = row[12] ? String(row[12]).split("; ") : [];
+      data.q8_favorites_other = row[13];
+      data.q9_external = row[14];
+      data.q10_wine_type = row[15];
+      data.q11_wine_price = row[16];
+      data.q12_promo_interest = row[17];
+      data.q13_promo_type = row[18] ? String(row[18]).split("; ") : [];
+      data.q14_convenient = row[19];
+      data.q15_rating = row[20] !== "" ? Number(row[20]) : "";
+      data.q16_nps_recommend = row[21];
+      data.q17_cold_items = row[22] ? String(row[22]).split("; ") : [];
+      data.q18_feedback = row[23];
       
       jsonArray.push(data);
     }
@@ -149,19 +153,23 @@ function doPost(e) {
         "Frequência de Visita", 
         "Setores Mais Utilizados", 
         "O que mais sente falta", 
-        "Avaliação de Preços", 
+        "Avaliação - Variedade", 
+        "Avaliação - Preço", 
+        "Avaliação - Organização", 
+        "Avaliação - Abastecimento", 
         "Deseja ver mais de", 
         "Horário que mais compra", 
-        "Opinião de Abastecimento", 
+        "Produtos Favoritos", 
+        "Produtos Favoritos (Outros)",
         "Compra fora do condomínio", 
-        "Variedade Cervejas", 
+        "Tipo de Vinho mais consumido", 
+        "Preço médio do Vinho", 
         "Compraria com Promoções", 
         "Promoções que chamam atenção", 
         "Conveniente para saídas rápidas", 
         "Nota do Minimercado (0-10)", 
         "Indicaria para outros condomínios", 
         "Deseja Gelados no Freezer", 
-        "Gelados (Outros Escritos)",
         "Sugestões Livres de Melhoria"
       ];
       sheet.appendRow(headers);
@@ -193,20 +201,24 @@ function doPost(e) {
       data.q2_freq || "",
       Array.isArray(data.q3_sectors) ? data.q3_sectors.join("; ") : (data.q3_sectors || ""),
       data.q4_lack || "",
-      data.q5_prices || "",
+      data.q5_aspect_variety !== undefined ? data.q5_aspect_variety : "",
+      data.q5_aspect_price !== undefined ? data.q5_aspect_price : "",
+      data.q5_aspect_organization !== undefined ? data.q5_aspect_organization : "",
+      data.q5_aspect_supply !== undefined ? data.q5_aspect_supply : "",
       Array.isArray(data.q6_see_more) ? data.q6_see_more.join("; ") : (data.q6_see_more || ""),
       data.q7_hour || "",
-      data.q8_supplied || "",
+      Array.isArray(data.q8_favorites) ? data.q8_favorites.join("; ") : (data.q8_favorites || ""),
+      data.q8_favorites_other || "",
       data.q9_external || "",
-      data.q10_beers || "",
-      data.q11_promo_interest || "",
-      Array.isArray(data.q12_promo_type) ? data.q12_promo_type.join("; ") : (data.q12_promo_type || ""),
-      data.q13_convenient || "",
-      data.q14_rating !== undefined ? data.q14_rating : "",
-      data.q15_nps_recommend || "",
-      Array.isArray(data.q16_cold_items) ? data.q16_cold_items.join("; ") : (data.q16_cold_items || ""),
-      data.q16_cold_other || "",
-      data.q17_feedback || ""
+      data.q10_wine_type || "",
+      data.q11_wine_price || "",
+      data.q12_promo_interest || "",
+      Array.isArray(data.q13_promo_type) ? data.q13_promo_type.join("; ") : (data.q13_promo_type || ""),
+      data.q14_convenient || "",
+      data.q15_rating !== undefined ? data.q15_rating : "",
+      data.q16_nps_recommend || "",
+      Array.isArray(data.q17_cold_items) ? data.q17_cold_items.join("; ") : (data.q17_cold_items || ""),
+      data.q18_feedback || ""
     ];
     
     // 6. Insere os dados como uma nova linha no final da planilha

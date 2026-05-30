@@ -49,7 +49,7 @@
       </div>
       <div class="progress-stats">
         <span id="progress-percentage">0%</span>
-        <span id="progress-step-text">Pergunta 1 de 16</span>
+        <span id="progress-step-text">Pergunta 1 de 18</span>
       </div>
     </div>
 
@@ -94,7 +94,7 @@
       <!-- STEP 1: Loja -->
       <section class="step-card" data-step="1">
         <div class="question-header">
-          <span class="question-num">01 / 17</span>
+          <span class="question-num">01 / 18</span>
           <h2>Qual loja do Aero Market 24h você está utilizando hoje?</h2>
           <p class="question-sub">Selecione a loja correspondente ao seu condomínio</p>
         </div>
@@ -134,7 +134,7 @@
       <!-- STEP 2: Frequência -->
       <section class="step-card" data-step="2">
         <div class="question-header">
-          <span class="question-num">02 / 17</span>
+          <span class="question-num">02 / 18</span>
           <h2>Com que frequência você compra no minimercado?</h2>
         </div>
         <div class="options-grid" data-type="single">
@@ -165,7 +165,7 @@
       <!-- STEP 3: Setor mais utilizado -->
       <section class="step-card" data-step="3">
         <div class="question-header">
-          <span class="question-num">03 / 17</span>
+          <span class="question-num">03 / 18</span>
           <h2>Qual setor você mais utiliza?</h2>
           <p class="question-sub">Pode selecionar mais de um setor se desejar</p>
         </div>
@@ -209,7 +209,7 @@
       <!-- STEP 4: O que mais falta -->
       <section class="step-card" data-step="4">
         <div class="question-header">
-          <span class="question-num">04 / 17</span>
+          <span class="question-num">04 / 18</span>
           <h2>O que você sente que MAIS falta hoje na loja?</h2>
           <p class="question-sub">Esta é uma das perguntas mais valiosas para melhorarmos as prateleiras.</p>
         </div>
@@ -219,37 +219,128 @@
         <div class="hint-text">Pode deixar em branco caso não lembre de nada.</div>
       </section>
 
-      <!-- STEP 5: Preços -->
+      <!-- STEP 5: Como você avalia o minimercado? (Grid multidimensional) -->
       <section class="step-card" data-step="5">
         <div class="question-header">
-          <span class="question-num">05 / 17</span>
-          <h2>Como você avalia os preços do minimercado?</h2>
+          <span class="question-num">05 / 18</span>
+          <h2>Como você avalia o minimercado?</h2>
+          <p class="question-sub">Dê uma nota de 1 a 5 para cada aspecto abaixo, onde 1 é "Muito ruim" e 5 é "Excelente".</p>
         </div>
-        <div class="options-grid col-2" data-type="single">
-          <button type="button" class="option-card border-success" data-value="Muito bons">
-            <span class="card-icon">💎</span>
-            <span class="card-text">Muito bons</span>
-          </button>
-          <button type="button" class="option-card border-primary" data-value="Justos">
-            <span class="card-icon">🤝</span>
-            <span class="card-text">Justos</span>
-          </button>
-          <button type="button" class="option-card border-warning" data-value="Um pouco altos">
-            <span class="card-icon">📈</span>
-            <span class="card-text">Um pouco altos</span>
-          </button>
-          <button type="button" class="option-card border-danger" data-value="Altos demais">
-            <span class="card-icon">⚠️</span>
-            <span class="card-text">Altos demais</span>
-          </button>
+        
+        <div class="aspect-rating-container">
+          <!-- Desktop Header -->
+          <div class="aspect-grid-header">
+            <span class="header-col-aspect">Aspectos</span>
+            <div class="header-col-ratings">
+              <div class="rating-header-num rating-num-1">
+                <span class="num-span">1</span>
+                <span class="rating-header-sub red-text">Muito ruim</span>
+              </div>
+              <div class="rating-header-num"><span class="num-span">2</span></div>
+              <div class="rating-header-num"><span class="num-span">3</span></div>
+              <div class="rating-header-num"><span class="num-span">4</span></div>
+              <div class="rating-header-num rating-num-5">
+                <span class="num-span">5</span>
+                <span class="rating-header-sub green-text">Excelente</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Row 1: Variedade -->
+          <div class="aspect-row" data-aspect="variety">
+            <div class="aspect-info">
+              <div class="aspect-icon-wrapper bg-indigo">
+                <i data-lucide="shopping-cart"></i>
+              </div>
+              <div class="aspect-details">
+                <span class="aspect-title">Variedade</span>
+                <span class="aspect-desc">Diversidade de produtos disponíveis</span>
+              </div>
+            </div>
+            <div class="aspect-options">
+              <button type="button" class="aspect-choice-btn" data-value="1" title="1 - Muito Ruim"></button>
+              <button type="button" class="aspect-choice-btn" data-value="2" title="2"></button>
+              <button type="button" class="aspect-choice-btn" data-value="3" title="3"></button>
+              <button type="button" class="aspect-choice-btn" data-value="4" title="4"></button>
+              <button type="button" class="aspect-choice-btn" data-value="5" title="5 - Excelente"></button>
+            </div>
+          </div>
+          
+          <!-- Row 2: Preço -->
+          <div class="aspect-row" data-aspect="price">
+            <div class="aspect-info">
+              <div class="aspect-icon-wrapper bg-emerald">
+                <i data-lucide="tag"></i>
+              </div>
+              <div class="aspect-details">
+                <span class="aspect-title">Preço</span>
+                <span class="aspect-desc">Justiça e competitividade dos preços</span>
+              </div>
+            </div>
+            <div class="aspect-options">
+              <button type="button" class="aspect-choice-btn" data-value="1" title="1 - Muito Ruim"></button>
+              <button type="button" class="aspect-choice-btn" data-value="2" title="2"></button>
+              <button type="button" class="aspect-choice-btn" data-value="3" title="3"></button>
+              <button type="button" class="aspect-choice-btn" data-value="4" title="4"></button>
+              <button type="button" class="aspect-choice-btn" data-value="5" title="5 - Excelente"></button>
+            </div>
+          </div>
+          
+          <!-- Row 3: Organização -->
+          <div class="aspect-row" data-aspect="organization">
+            <div class="aspect-info">
+              <div class="aspect-icon-wrapper bg-purple">
+                <i data-lucide="layout"></i>
+              </div>
+              <div class="aspect-details">
+                <span class="aspect-title">Organização</span>
+                <span class="aspect-desc">Facilidade para encontrar os produtos e limpeza</span>
+              </div>
+            </div>
+            <div class="aspect-options">
+              <button type="button" class="aspect-choice-btn" data-value="1" title="1 - Muito Ruim"></button>
+              <button type="button" class="aspect-choice-btn" data-value="2" title="2"></button>
+              <button type="button" class="aspect-choice-btn" data-value="3" title="3"></button>
+              <button type="button" class="aspect-choice-btn" data-value="4" title="4"></button>
+              <button type="button" class="aspect-choice-btn" data-value="5" title="5 - Excelente"></button>
+            </div>
+          </div>
+          
+          <!-- Row 4: Frequência de abastecimento -->
+          <div class="aspect-row" data-aspect="supply">
+            <div class="aspect-info">
+              <div class="aspect-icon-wrapper bg-amber">
+                <i data-lucide="truck"></i>
+              </div>
+              <div class="aspect-details">
+                <span class="aspect-title">Frequência de abastecimento</span>
+                <span class="aspect-desc">Reposição de produtos e disponibilidade</span>
+              </div>
+            </div>
+            <div class="aspect-options">
+              <button type="button" class="aspect-choice-btn" data-value="1" title="1 - Muito Ruim"></button>
+              <button type="button" class="aspect-choice-btn" data-value="2" title="2"></button>
+              <button type="button" class="aspect-choice-btn" data-value="3" title="3"></button>
+              <button type="button" class="aspect-choice-btn" data-value="4" title="4"></button>
+              <button type="button" class="aspect-choice-btn" data-value="5" title="5 - Excelente"></button>
+            </div>
+          </div>
         </div>
-        <div class="validation-msg">Por favor, selecione uma opção antes de prosseguir.</div>
+        
+        <!-- Legend under Aspect grid -->
+        <div class="aspect-legend-bar">
+          <span class="aspect-legend-item text-red">😠 1 - Muito ruim</span>
+          <span class="aspect-legend-item text-muted">😐 3 - Regular</span>
+          <span class="aspect-legend-item text-green">😊 5 - Excelente</span>
+        </div>
+        
+        <div class="validation-msg">Por favor, selecione uma nota de 1 a 5 para cada um dos 4 aspectos.</div>
       </section>
 
       <!-- STEP 6: Gostaria de ver mais -->
       <section class="step-card" data-step="6">
         <div class="question-header">
-          <span class="question-num">06 / 17</span>
+          <span class="question-num">06 / 18</span>
           <h2>Qual tipo de produto você gostaria de ver mais?</h2>
           <p class="question-sub">Pode selecionar múltiplas opções</p>
         </div>
@@ -297,7 +388,7 @@
       <!-- STEP 7: Horário de compra -->
       <section class="step-card" data-step="7">
         <div class="question-header">
-          <span class="question-num">07 / 17</span>
+          <span class="question-num">07 / 18</span>
           <h2>Você costuma comprar mais em qual horário?</h2>
           <p class="question-sub">Esta resposta ajuda muito na inteligência de abastecimento da loja.</p>
         </div>
@@ -322,37 +413,66 @@
         <div class="validation-msg">Por favor, selecione uma opção.</div>
       </section>
 
-      <!-- STEP 8: Loja bem abastecida -->
+      <!-- STEP 8: Produtos favoritos -->
       <section class="step-card" data-step="8">
         <div class="question-header">
-          <span class="question-num">08 / 17</span>
-          <h2>Você acha a loja bem abastecida?</h2>
+          <span class="question-num">08 / 18</span>
+          <h2>Quais seus produtos favoritos no minimercado?</h2>
+          <p class="question-sub">Selecione todos os produtos de sua preferência (múltipla escolha)</p>
         </div>
-        <div class="options-grid" data-type="single">
-          <button type="button" class="option-card" data-value="Sempre">
-            <span class="card-icon">🟢</span>
-            <span class="card-text">Sempre cheia e organizada</span>
+        <div class="options-grid" data-type="multiple">
+          <button type="button" class="option-card" data-value="Dindim Gourmet">
+            <span class="card-icon">🍦</span>
+            <span class="card-text">Dindim Gourmet</span>
           </button>
-          <button type="button" class="option-card" data-value="Na maioria das vezes">
-            <span class="card-icon">🟡</span>
-            <span class="card-text">Na maioria das vezes</span>
+          <button type="button" class="option-card" data-value="Marmitas congeladas">
+            <span class="card-icon">🍲</span>
+            <span class="card-text">Marmitas congeladas</span>
           </button>
-          <button type="button" class="option-card" data-value="Às vezes faltam produtos">
-            <span class="card-icon">🟠</span>
-            <span class="card-text">Às vezes faltam produtos essenciais</span>
+          <button type="button" class="option-card" data-value="Pastel Dom Coutinho">
+            <span class="card-icon">🥟</span>
+            <span class="card-text">Pastel Dom Coutinho</span>
           </button>
-          <button type="button" class="option-card" data-value="Frequentemente encontro produtos em falta">
-            <span class="card-icon">🔴</span>
-            <span class="card-text">Frequentemente encontro buracos nas gôndolas</span>
+          <button type="button" class="option-card" data-value="Cacau Show">
+            <span class="card-icon">🍫</span>
+            <span class="card-text">Cacau Show</span>
+          </button>
+          <button type="button" class="option-card" data-value="Batata Chips Caipira">
+            <span class="card-icon">🥔</span>
+            <span class="card-text">Batata Chips Caipira</span>
+          </button>
+          <button type="button" class="option-card" data-value="Barra Whey Ovomaltine">
+            <span class="card-icon">💪</span>
+            <span class="card-text">Barra Whey Ovomaltine</span>
+          </button>
+          <button type="button" class="option-card" data-value="Kinder Bueno">
+            <span class="card-icon">🍫</span>
+            <span class="card-text">Kinder Bueno</span>
+          </button>
+          <button type="button" class="option-card" data-value="Pudim no Copo">
+            <span class="card-icon">🍮</span>
+            <span class="card-text">Pudim no Copo</span>
+          </button>
+          <button type="button" class="option-card" data-value="Crepe">
+            <span class="card-icon">🥞</span>
+            <span class="card-text">Crepe</span>
+          </button>
+          <button type="button" class="option-card" data-value="Outros" id="favorite-other-card">
+            <span class="card-icon">✏️</span>
+            <span class="card-text">Outros</span>
           </button>
         </div>
-        <div class="validation-msg">Por favor, selecione uma opção.</div>
+        <!-- Conditionally displayed input for Outros favoritos -->
+        <div id="favorites-other-wrapper" class="textarea-animated-wrapper" style="display: none; margin-top: 1rem;">
+          <input type="text" id="q8-favorites-other" class="input-field" placeholder="Escreva os produtos favoritos adicionais..." maxlength="150">
+        </div>
+        <div class="validation-msg">Por favor, selecione pelo menos uma opção antes de prosseguir.</div>
       </section>
 
       <!-- STEP 9: Mercado externo -->
       <section class="step-card" data-step="9">
         <div class="question-header">
-          <span class="question-num">09 / 17</span>
+          <span class="question-num">09 / 18</span>
           <h2>Qual produto você mais compra no mercado externo e gostaria de encontrar aqui?</h2>
           <p class="question-sub">Isso nos ajuda a evitar que você precise sair do condomínio.</p>
         </div>
@@ -362,37 +482,82 @@
         <div class="hint-text">Pode deixar em branco se preferir.</div>
       </section>
 
-      <!-- STEP 10: Variedade cervejas -->
+      <!-- STEP 10: Consumo de vinho -->
       <section class="step-card" data-step="10">
         <div class="question-header">
-          <span class="question-num">10 / 17</span>
-          <h2>Como você avalia a variedade de cervejas?</h2>
+          <span class="question-num">10 / 18</span>
+          <h2>🍷 Qual o tipo de vinho que você mais consome?</h2>
+          <p class="question-sub">Selecione a opção que melhor representa seu consumo.</p>
         </div>
         <div class="options-grid col-2" data-type="single">
-          <button type="button" class="option-card" data-value="Excelente">
-            <span class="card-icon">🤩</span>
-            <span class="card-text">Excelente</span>
+          <button type="button" class="option-card" data-value="Tinto">
+            <span class="card-icon">🍇</span>
+            <span class="card-text">Tinto</span>
           </button>
-          <button type="button" class="option-card" data-value="Boa">
-            <span class="card-icon">🙂</span>
-            <span class="card-text">Boa</span>
+          <button type="button" class="option-card" data-value="Branco">
+            <span class="card-icon">🥂</span>
+            <span class="card-text">Branco</span>
           </button>
-          <button type="button" class="option-card" data-value="Pode melhorar">
-            <span class="card-icon">😐</span>
-            <span class="card-text">Pode melhorar</span>
+          <button type="button" class="option-card" data-value="Espumante Brut">
+            <span class="card-icon">✨</span>
+            <span class="card-text">Espumante Brut</span>
           </button>
-          <button type="button" class="option-card" data-value="Fraca">
-            <span class="card-icon">😞</span>
-            <span class="card-text">Fraca / Não atende</span>
+          <button type="button" class="option-card" data-value="Espumante Moscatel">
+            <span class="card-icon">🍾</span>
+            <span class="card-text">Espumante Moscatel</span>
+          </button>
+          <button type="button" class="option-card" data-value="Rosé">
+            <span class="card-icon">🌹</span>
+            <span class="card-text">Rosé</span>
+          </button>
+          <button type="button" class="option-card" data-value="Outro">
+            <span class="card-icon">✏️</span>
+            <span class="card-text">Outro</span>
           </button>
         </div>
         <div class="validation-msg">Por favor, selecione uma opção.</div>
       </section>
 
-      <!-- STEP 11: Compraria mais com promoções -->
+      <!-- STEP 11: Faixa de preço de vinhos -->
       <section class="step-card" data-step="11">
         <div class="question-header">
-          <span class="question-num">11 / 17</span>
+          <span class="question-num">11 / 18</span>
+          <h2>💰 Quanto você costuma pagar por uma garrafa de vinho de 750ml?</h2>
+          <p class="question-sub">Escolha a faixa que mais se aproxima do seu consumo habitual.</p>
+        </div>
+        <div class="options-grid col-2" data-type="single">
+          <button type="button" class="option-card" data-value="Até R$20">
+            <span class="card-icon">🟢</span>
+            <span class="card-text">Até R$20</span>
+          </button>
+          <button type="button" class="option-card" data-value="R$20 a R$30">
+            <span class="card-icon">🔵</span>
+            <span class="card-text">R$20 a R$30</span>
+          </button>
+          <button type="button" class="option-card" data-value="R$30 a R$40">
+            <span class="card-icon">🟣</span>
+            <span class="card-text">R$30 a R$40</span>
+          </button>
+          <button type="button" class="option-card" data-value="R$40 a R$50">
+            <span class="card-icon">🟠</span>
+            <span class="card-text">R$40 a R$50</span>
+          </button>
+          <button type="button" class="option-card" data-value="R$50 a R$100">
+            <span class="card-icon">🟡</span>
+            <span class="card-text">R$50 a R$100</span>
+          </button>
+          <button type="button" class="option-card" data-value="Acima de R$100">
+            <span class="card-icon">⭐</span>
+            <span class="card-text">Acima de R$100</span>
+          </button>
+        </div>
+        <div class="validation-msg">Por favor, selecione uma faixa de preço.</div>
+      </section>
+
+      <!-- STEP 12: Compraria mais com promoções -->
+      <section class="step-card" data-step="12">
+        <div class="question-header">
+          <span class="question-num">12 / 18</span>
           <h2>Você compraria mais se houvesse promoções semanais?</h2>
         </div>
         <div class="options-grid col-3" data-type="single">
@@ -412,10 +577,10 @@
         <div class="validation-msg">Por favor, selecione uma opção.</div>
       </section>
 
-      <!-- STEP 12: Promoção que chama mais atenção -->
-      <section class="step-card" data-step="12">
+      <!-- STEP 13: Promoção que chama mais atenção -->
+      <section class="step-card" data-step="13">
         <div class="question-header">
-          <span class="question-num">12 / 17</span>
+          <span class="question-num">13 / 18</span>
           <h2>Qual promoção chamaria mais sua atenção?</h2>
           <p class="question-sub">Pode selecionar múltiplas opções</p>
         </div>
@@ -448,10 +613,10 @@
         <div class="validation-msg">Por favor, selecione pelo menos uma opção.</div>
       </section>
 
-      <!-- STEP 13: Conveniente para saídas rápidas -->
-      <section class="step-card" data-step="13">
+      <!-- STEP 14: Conveniente para saídas rápidas -->
+      <section class="step-card" data-step="14">
         <div class="question-header">
-          <span class="question-num">13 / 17</span>
+          <span class="question-num">14 / 18</span>
           <h2>Você considera o minimercado conveniente para evitar saídas rápidas?</h2>
         </div>
         <div class="options-grid col-2" data-type="single">
@@ -475,10 +640,10 @@
         <div class="validation-msg">Por favor, selecione uma opção.</div>
       </section>
 
-      <!-- STEP 14: Nota Geral -->
-      <section class="step-card" data-step="14">
+      <!-- STEP 15: Nota Geral -->
+      <section class="step-card" data-step="15">
         <div class="question-header">
-          <span class="question-num">14 / 17</span>
+          <span class="question-num">15 / 18</span>
           <h2>Qual nota você dá hoje para o Aero Market 24h?</h2>
           <p class="question-sub">Sua nota nos ajuda a calcular nosso indicador de satisfação geral (NPS)</p>
         </div>
@@ -505,10 +670,10 @@
         <div class="validation-msg">Por favor, selecione uma nota de 0 a 10.</div>
       </section>
 
-      <!-- STEP 15: Indicaria -->
-      <section class="step-card" data-step="15">
+      <!-- STEP 16: Indicaria -->
+      <section class="step-card" data-step="16">
         <div class="question-header">
-          <span class="question-num">15 / 17</span>
+          <span class="question-num">16 / 18</span>
           <h2>Você indicaria o Aero Market 24h para outro condomínio?</h2>
         </div>
         <div class="options-grid col-3" data-type="single">
@@ -528,10 +693,10 @@
         <div class="validation-msg">Por favor, selecione uma opção.</div>
       </section>
 
-      <!-- STEP 16: Produtos GELADOS (Q EXTRA) -->
-      <section class="step-card" data-step="16">
+      <!-- STEP 17: Produtos GELADOS (Q EXTRA) -->
+      <section class="step-card" data-step="17">
         <div class="question-header">
-          <span class="question-num">16 / 17</span>
+          <span class="question-num">17 / 18</span>
           <h2>Quais produtos você gostaria de encontrar sempre GELADOS no refrigerador?</h2>
           <p class="question-sub">Pode selecionar múltiplas opções</p>
         </div>
@@ -568,12 +733,12 @@
         <div class="validation-msg">Por favor, selecione pelo menos uma opção.</div>
       </section>
 
-      <!-- STEP 17: Sugestão livre -->
-      <section class="step-card" data-step="17">
+      <!-- STEP 18: Sugestão livre -->
+      <section class="step-card" data-step="18">
         <div class="question-header">
-          <span class="question-num">17 / 17</span>
+          <span class="question-num">18 / 18</span>
           <h2>Deixe uma sugestão livre para melhorar o Aero Market 24h</h2>
-          <p class="question-sub">Críticas, ideias, elogios, sugestões de funcionamento. Fique à vontade!</p>
+          <p class="question-sub">Críticas, ideas, elogios, sugestões de funcionamento. Fique à vontade!</p>
         </div>
         <div class="input-wrapper">
           <textarea id="q16-feedback" class="input-field" placeholder="Escreva aqui o que você gostaria de nos dizer..." rows="4" maxlength="1000"></textarea>
@@ -581,8 +746,8 @@
         <div class="hint-text">Clique em "Enviar Pesquisa" para salvar. Suas respostas são anônimas.</div>
       </section>
 
-      <!-- STEP 18: Sucesso / Thank You Screen -->
-      <section class="step-card" data-step="18">
+      <!-- STEP 19: Sucesso / Thank You Screen -->
+      <section class="step-card" data-step="19">
         <div class="success-box">
           <div class="success-icon-wrapper">
             <i data-lucide="check-circle-2" class="icon-success"></i>
@@ -771,7 +936,7 @@
         
         <div class="chart-card card-half">
           <div class="chart-header">
-            <h4>Avaliação de Preços</h4>
+            <h4>Médias de Avaliação do Minimercado</h4>
           </div>
           <div class="chart-canvas-wrapper">
             <canvas id="chart-prices"></canvas>
@@ -782,7 +947,7 @@
       <div class="charts-row">
         <div class="chart-card card-third">
           <div class="chart-header">
-            <h4>Abastecimento / Estoque</h4>
+            <h4>Produtos Favoritos</h4>
           </div>
           <div class="chart-canvas-wrapper">
             <canvas id="chart-supply"></canvas>
@@ -791,7 +956,7 @@
 
         <div class="chart-card card-third">
           <div class="chart-header">
-            <h4>Variedade de Cervejas</h4>
+            <h4>Tipo de Vinho Mais Consumido</h4>
           </div>
           <div class="chart-canvas-wrapper">
             <canvas id="chart-beers"></canvas>
@@ -800,16 +965,16 @@
 
         <div class="chart-card card-third">
           <div class="chart-header">
-            <h4>Compraria mais com promoções?</h4>
+            <h4>Faixa de Preço de Vinho (750ml)</h4>
           </div>
           <div class="chart-canvas-wrapper">
-            <canvas id="chart-promo-interest"></canvas>
+            <canvas id="chart-wine-price"></canvas>
           </div>
         </div>
       </div>
 
       <div class="charts-row">
-        <div class="chart-card card-half">
+        <div class="chart-card card-third">
           <div class="chart-header">
             <h4>Setores Mais Utilizados</h4>
           </div>
@@ -818,12 +983,21 @@
           </div>
         </div>
 
-        <div class="chart-card card-half">
+        <div class="chart-card card-third">
           <div class="chart-header">
-            <h4>Quais produtos gostariam de ver GELADOS?</h4>
+            <h4>Produtos Gelados no Freezer</h4>
           </div>
           <div class="chart-canvas-wrapper">
             <canvas id="chart-cold-items"></canvas>
+          </div>
+        </div>
+
+        <div class="chart-card card-third">
+          <div class="chart-header">
+            <h4>Compraria com Promoções?</h4>
+          </div>
+          <div class="chart-canvas-wrapper">
+            <canvas id="chart-promo-interest"></canvas>
           </div>
         </div>
       </div>

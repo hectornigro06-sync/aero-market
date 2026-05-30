@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // APP STATE
   let currentStep = 0;
-  const totalSteps = 17; // Questions from 1 to 17
+  const totalSteps = 18; // Questions from 1 to 18
   let responses = JSON.parse(localStorage.getItem('aero_market_responses')) || [];
   let theme = localStorage.getItem('aero_market_theme') || 'dark';
 
@@ -82,18 +82,18 @@ document.addEventListener('DOMContentLoaded', () => {
     // Scroll to the very top of the page so header/progress are visible
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    // Focus on first input if text screen (indices shifted by 1 due to Loja card)
+    // Focus on first input if text screen (indices shifted due to wine questions)
     if (stepIndex === 4) {
       document.getElementById('q3-lack').focus();
     } else if (stepIndex === 9) {
       document.getElementById('q8-external').focus();
-    } else if (stepIndex === 17) {
+    } else if (stepIndex === 18) {
       document.getElementById('q16-feedback').focus();
     }
 
     // Toggle class to hide progress & navigation in CSS as a fail-safe
     if (formView) {
-      if (stepIndex === 0 || stepIndex === 18) {
+      if (stepIndex === 0 || stepIndex === 19) {
         formView.classList.add('hide-progress');
       } else {
         formView.classList.remove('hide-progress');
@@ -107,8 +107,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const navControls = document.getElementById('navigation-controls');
     const progressContainer = document.querySelector('.progress-container');
 
-    // Hide controls altogether on welcome step (0) and success step (18)
-    if (stepIndex === 0 || stepIndex === 18) {
+    // Hide controls altogether on welcome step (0) and success step (19)
+    if (stepIndex === 0 || stepIndex === 19) {
       navControls.style.display = 'none';
       progressContainer.style.display = 'none';
       return;
@@ -152,7 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (validateStep(currentStep)) {
       if (currentStep === totalSteps) {
         saveResponse();
-        currentStep = 18; // Success Screen
+        currentStep = 19; // Success Screen
         showStep(currentStep);
       } else {
         currentStep++;
@@ -186,6 +186,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (isMultiple) {
         card.classList.toggle('selected');
+        
+        // Q8 Outros slide check
+        if (currentStep === 8 && card.id === 'favorite-other-card') {
+          const wrapper = document.getElementById('favorites-other-wrapper');
+          if (card.classList.contains('selected')) {
+            wrapper.classList.add('show');
+            wrapper.style.display = 'block';
+            setTimeout(() => {
+              document.getElementById('q8-favorites-other').focus();
+            }, 100);
+          } else {
+            wrapper.classList.remove('show');
+            setTimeout(() => {
+              wrapper.style.display = 'none';
+            }, 300);
+            document.getElementById('q8-favorites-other').value = '';
+          }
+        }
       } else {
         // Single Select
         grid.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
@@ -193,12 +211,35 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Auto-advance with small visual delay so user sees selection (250ms)
         setTimeout(() => {
-          if (currentStep === 15) {
-            // Gelados contains an text input at the bottom, so do not auto-advance if gelados is multiple.
-            // Wait, gelados is data-type="multiple", so it won't hit here.
-          }
           nextStep();
         }, 250);
+      }
+    });
+  });
+
+  // Handle aspect rating buttons grid (Q5 aspects rating grid)
+  document.querySelectorAll('.aspect-row').forEach(row => {
+    row.addEventListener('click', (e) => {
+      const btn = e.target.closest('.aspect-choice-btn');
+      if (!btn) return;
+
+      row.querySelectorAll('.aspect-choice-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+
+      const card = btn.closest('.step-card');
+      const validationMsg = card.querySelector('.validation-msg');
+      if (validationMsg) validationMsg.style.display = 'none';
+
+      // Auto-advance if all 4 aspects are rated!
+      const varietySelected = card.querySelector('.aspect-row[data-aspect="variety"] .aspect-choice-btn.selected');
+      const priceSelected = card.querySelector('.aspect-row[data-aspect="price"] .aspect-choice-btn.selected');
+      const organizationSelected = card.querySelector('.aspect-row[data-aspect="organization"] .aspect-choice-btn.selected');
+      const supplySelected = card.querySelector('.aspect-row[data-aspect="supply"] .aspect-choice-btn.selected');
+
+      if (varietySelected && priceSelected && organizationSelected && supplySelected) {
+        setTimeout(() => {
+          if (currentStep === 5) nextStep();
+        }, 400);
       }
     });
   });
@@ -240,15 +281,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function validateStep(stepIndex) {
     // Welcome screen or text screens (which are optional)
-    if (stepIndex === 0 || stepIndex === 4 || stepIndex === 9 || stepIndex === 17 || stepIndex === 18) {
+    if (stepIndex === 0 || stepIndex === 4 || stepIndex === 9 || stepIndex === 18 || stepIndex === 19) {
       return true;
     }
 
     const card = document.querySelector(`.step-card[data-step="${stepIndex}"]`);
     const validationMsg = card.querySelector('.validation-msg');
 
-    if (stepIndex === 14) {
-      // Rating Q14
+    // Q5: Aspect rating grid validation (all 4 aspects must be rated)
+    if (stepIndex === 5) {
+      const varietySelected = card.querySelector('.aspect-row[data-aspect="variety"] .aspect-choice-btn.selected');
+      const priceSelected = card.querySelector('.aspect-row[data-aspect="price"] .aspect-choice-btn.selected');
+      const organizationSelected = card.querySelector('.aspect-row[data-aspect="organization"] .aspect-choice-btn.selected');
+      const supplySelected = card.querySelector('.aspect-row[data-aspect="supply"] .aspect-choice-btn.selected');
+      
+      if (!varietySelected || !priceSelected || !organizationSelected || !supplySelected) {
+        if (validationMsg) validationMsg.style.display = 'block';
+        return false;
+      }
+      return true;
+    }
+
+    if (stepIndex === 15) {
+      // Rating Q15 (NPS 0-10 score)
       const selectedRating = card.querySelector('.rating-btn.selected');
       if (!selectedRating) {
         if (validationMsg) validationMsg.style.display = 'block';
@@ -260,8 +315,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const grid = card.querySelector('.options-grid');
     const selectedOptions = grid.querySelectorAll('.option-card.selected');
 
-    if (stepIndex === 16) {
-      // Gelados (Q16): selected cards
+    if (stepIndex === 17) {
+      // Gelados (Q17): selected cards
       if (selectedOptions.length === 0) {
         if (validationMsg) validationMsg.style.display = 'block';
         return false;
@@ -283,6 +338,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // ==========================================================================
 
   function saveResponse() {
+    const aspectCard = document.querySelector('.step-card[data-step="5"]');
+    
     const data = {
       id: 'resp_' + Date.now() + '_' + Math.floor(Math.random() * 1000),
       timestamp: new Date().toISOString(),
@@ -299,8 +356,11 @@ document.addEventListener('DOMContentLoaded', () => {
       // Question 4: Falta na loja
       q4_lack: document.getElementById('q3-lack').value.trim(),
       
-      // Question 5: Preço
-      q5_prices: getSelectedValue(5),
+      // Question 5: Aspectos avaliados (Grade de aspectos)
+      q5_aspect_variety: aspectCard.querySelector('.aspect-row[data-aspect="variety"] .aspect-choice-btn.selected') ? parseInt(aspectCard.querySelector('.aspect-row[data-aspect="variety"] .aspect-choice-btn.selected').getAttribute('data-value')) : "",
+      q5_aspect_price: aspectCard.querySelector('.aspect-row[data-aspect="price"] .aspect-choice-btn.selected') ? parseInt(aspectCard.querySelector('.aspect-row[data-aspect="price"] .aspect-choice-btn.selected').getAttribute('data-value')) : "",
+      q5_aspect_organization: aspectCard.querySelector('.aspect-row[data-aspect="organization"] .aspect-choice-btn.selected') ? parseInt(aspectCard.querySelector('.aspect-row[data-aspect="organization"] .aspect-choice-btn.selected').getAttribute('data-value')) : "",
+      q5_aspect_supply: aspectCard.querySelector('.aspect-row[data-aspect="supply"] .aspect-choice-btn.selected') ? parseInt(aspectCard.querySelector('.aspect-row[data-aspect="supply"] .aspect-choice-btn.selected').getAttribute('data-value')) : "",
       
       // Question 6: Ver mais
       q6_see_more: getSelectedValues(6),
@@ -308,36 +368,39 @@ document.addEventListener('DOMContentLoaded', () => {
       // Question 7: Horário
       q7_hour: getSelectedValue(7),
       
-      // Question 8: Abastecido
-      q8_supplied: getSelectedValue(8),
+      // Question 8: Produtos favoritos
+      q8_favorites: getSelectedValues(8),
+      q8_favorites_other: document.getElementById('q8-favorites-other').value.trim(),
       
       // Question 9: Mercado externo
       q9_external: document.getElementById('q8-external').value.trim(),
       
-      // Question 10: Cervejas variedade
-      q10_beers: getSelectedValue(10),
+      // Question 10: Consumo de vinhos
+      q10_wine_type: getSelectedValue(10),
       
-      // Question 11: Promoções semanais
-      q11_promo_interest: getSelectedValue(11),
+      // Question 11: Preço habitual do vinho
+      q11_wine_price: getSelectedValue(11),
       
-      // Question 12: Tipo promoção
-      q12_promo_type: getSelectedValues(12),
+      // Question 12: Promoções semanais
+      q12_promo_interest: getSelectedValue(12),
       
-      // Question 13: Conveniente
-      q13_convenient: getSelectedValue(13),
+      // Question 13: Tipo promoção
+      q13_promo_type: getSelectedValues(13),
       
-      // Question 14: Nota
-      q14_rating: parseInt(document.querySelector('.step-card[data-step="14"] .rating-btn.selected').getAttribute('data-value')),
+      // Question 14: Conveniente
+      q14_convenient: getSelectedValue(14),
       
-      // Question 15: Indicaria
-      q15_nps_recommend: getSelectedValue(15),
+      // Question 15: Nota
+      q15_rating: parseInt(document.querySelector('.step-card[data-step="15"] .rating-btn.selected').getAttribute('data-value')),
       
-      // Question 16: Gelados
-      q16_cold_items: getSelectedValues(16),
-      q16_cold_other: '',
+      // Question 16: Indicaria
+      q16_nps_recommend: getSelectedValue(16),
       
-      // Question 17: Sugestão livre
-      q17_feedback: document.getElementById('q16-feedback').value.trim()
+      // Question 17: Gelados
+      q17_cold_items: getSelectedValues(17),
+      
+      // Question 18: Sugestão livre
+      q18_feedback: document.getElementById('q16-feedback').value.trim()
     };
 
     responses.push(data);
@@ -373,11 +436,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // Clear selected cards
     document.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
     document.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('selected'));
+    document.querySelectorAll('.aspect-choice-btn').forEach(b => b.classList.remove('selected'));
     
     // Clear inputs
     document.getElementById('q3-lack').value = '';
     document.getElementById('q8-external').value = '';
     document.getElementById('q16-feedback').value = '';
+    document.getElementById('q8-favorites-other').value = '';
+    
+    // Reset Outros favorites sliding wrapper
+    const favOtherWrapper = document.getElementById('favorites-other-wrapper');
+    if (favOtherWrapper) {
+      favOtherWrapper.classList.remove('show');
+      favOtherWrapper.style.display = 'none';
+    }
     
     currentStep = 0;
     showStep(currentStep);
@@ -577,14 +649,16 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // 1. Calculate Average Rating (Q14)
+    // 1. Calculate Average Rating (Q15)
     let sum = 0;
     let validRatingsCount = 0;
     filteredResponses.forEach(r => {
       let ratingVal = undefined;
-      if (r.q14_rating !== undefined && r.q14_rating !== null) {
+      if (r.q15_rating !== undefined && r.q15_rating !== null && r.q15_rating !== "") {
+        ratingVal = r.q15_rating;
+      } else if (r.q14_rating !== undefined && r.q14_rating !== null && r.q14_rating !== "") {
         ratingVal = r.q14_rating;
-      } else if (r.q13_rating !== undefined && r.q13_rating !== null) {
+      } else if (r.q13_rating !== undefined && r.q13_rating !== null && r.q13_rating !== "") {
         ratingVal = r.q13_rating;
       }
       
@@ -604,9 +678,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let validNpsCount = 0;
     filteredResponses.forEach(r => {
       let ratingVal = undefined;
-      if (r.q14_rating !== undefined && r.q14_rating !== null) {
+      if (r.q15_rating !== undefined && r.q15_rating !== null && r.q15_rating !== "") {
+        ratingVal = r.q15_rating;
+      } else if (r.q14_rating !== undefined && r.q14_rating !== null && r.q14_rating !== "") {
         ratingVal = r.q14_rating;
-      } else if (r.q13_rating !== undefined && r.q13_rating !== null) {
+      } else if (r.q13_rating !== undefined && r.q13_rating !== null && r.q13_rating !== "") {
         ratingVal = r.q13_rating;
       }
       
@@ -725,19 +801,50 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    // B) Prices (Bar)
-    const priceCounts = countValues(dataset, 'q5_prices');
-    const priceKeys = ['Muito bons', 'Justos', 'Um pouco altos', 'Altos demais'];
-    const priceValues = priceKeys.map(k => priceCounts[k] || 0);
-
+    // B) Aspect Ratings (Bar Chart from 1.0 to 5.0)
+    let varietySum = 0, varietyCount = 0;
+    let priceSum = 0, priceCount = 0;
+    let organizationSum = 0, organizationCount = 0;
+    let supplySum = 0, supplyCount = 0;
+    
+    dataset.forEach(r => {
+      // Variedade
+      if (r.q5_aspect_variety !== undefined && r.q5_aspect_variety !== null && r.q5_aspect_variety !== "") {
+        const val = Number(r.q5_aspect_variety);
+        if (!isNaN(val)) { varietySum += val; varietyCount++; }
+      }
+      // Preço
+      if (r.q5_aspect_price !== undefined && r.q5_aspect_price !== null && r.q5_aspect_price !== "") {
+        const val = Number(r.q5_aspect_price);
+        if (!isNaN(val)) { priceSum += val; priceCount++; }
+      }
+      // Organização
+      if (r.q5_aspect_organization !== undefined && r.q5_aspect_organization !== null && r.q5_aspect_organization !== "") {
+        const val = Number(r.q5_aspect_organization);
+        if (!isNaN(val)) { organizationSum += val; organizationCount++; }
+      }
+      // Frequência de abastecimento
+      if (r.q5_aspect_supply !== undefined && r.q5_aspect_supply !== null && r.q5_aspect_supply !== "") {
+        const val = Number(r.q5_aspect_supply);
+        if (!isNaN(val)) { supplySum += val; supplyCount++; }
+      }
+    });
+    
+    const aspectAverages = [
+      varietyCount > 0 ? (varietySum / varietyCount) : 0,
+      priceCount > 0 ? (priceSum / priceCount) : 0,
+      organizationCount > 0 ? (organizationSum / organizationCount) : 0,
+      supplyCount > 0 ? (supplySum / supplyCount) : 0
+    ];
+    
     charts.prices = new Chart(document.getElementById('chart-prices'), {
       type: 'bar',
       data: {
-        labels: priceKeys,
+        labels: ['Variedade', 'Preço', 'Organização', 'Abastecimento'],
         datasets: [{
-          label: 'Votos',
-          data: priceValues,
-          backgroundColor: ['#10b981', '#6366f1', '#f59e0b', '#ef4444'],
+          label: 'Média de Nota',
+          data: aspectAverages,
+          backgroundColor: ['#6366f1', '#10b981', '#8b5cf6', '#f59e0b'],
           borderRadius: 8
         }]
       },
@@ -747,20 +854,62 @@ document.addEventListener('DOMContentLoaded', () => {
         plugins: { legend: { display: false } },
         scales: {
           x: { grid: { display: false } },
-          y: { grid: { color: gridColor }, ticks: { precision: 0 } }
+          y: { 
+            grid: { color: gridColor }, 
+            min: 1,
+            max: 5,
+            ticks: { stepSize: 1, precision: 1 } 
+          }
         }
       }
     });
 
-    // C) Supply (Pie)
-    const supplyCounts = countValues(dataset, 'q8_supplied');
+    // C) Favorite Products (Horizontal Bar Chart)
+    const favCounts = countArrayValues(dataset, 'q8_favorites');
+    
+    // Add custom "Others" responses to the count if any
+    let otherFavCount = 0;
+    dataset.forEach(r => {
+      if (r.q8_favorites_other && r.q8_favorites_other.trim() !== '') {
+        favCounts[r.q8_favorites_other] = (favCounts[r.q8_favorites_other] || 0) + 1;
+        otherFavCount++;
+      }
+    });
+    
+    const sortedFavs = Object.entries(favCounts).sort((a,b) => b[1] - a[1]);
+    
     charts.supply = new Chart(document.getElementById('chart-supply'), {
-      type: 'pie',
+      type: 'bar',
       data: {
-        labels: Object.keys(supplyCounts),
+        labels: sortedFavs.map(x => x[0]),
         datasets: [{
-          data: Object.values(supplyCounts),
-          backgroundColor: ['#10b981', '#6366f1', '#f59e0b', '#ef4444'],
+          label: 'Mencionados',
+          data: sortedFavs.map(x => x[1]),
+          backgroundColor: '#6366f1',
+          borderRadius: 8
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { grid: { color: gridColor }, ticks: { precision: 0 } },
+          y: { grid: { display: false } }
+        }
+      }
+    });
+
+    // D) Wine Type (Doughnut Chart)
+    const wineCounts = countValues(dataset, 'q10_wine_type');
+    charts.beers = new Chart(document.getElementById('chart-beers'), {
+      type: 'doughnut',
+      data: {
+        labels: Object.keys(wineCounts),
+        datasets: [{
+          data: Object.values(wineCounts),
+          backgroundColor: ['#b91c1c', '#fef08a', '#e11d48', '#fb7185', '#f472b6', '#94a3b8'],
           borderColor: isDark ? '#1e293b' : '#ffffff',
           borderWidth: 2
         }]
@@ -774,19 +923,19 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    // D) Beer Variety (Bar)
-    const beerCounts = countValues(dataset, 'q10_beers');
-    const beerKeys = ['Excelente', 'Boa', 'Pode melhorar', 'Fraca'];
-    const beerValues = beerKeys.map(k => beerCounts[k] || 0);
-
-    charts.beers = new Chart(document.getElementById('chart-beers'), {
+    // E) Wine Bottle Price (Vertical Bar Chart)
+    const winePriceCounts = countValues(dataset, 'q11_wine_price');
+    const winePriceKeys = ['Até R$20', 'R$20 a R$30', 'R$30 a R$40', 'R$40 a R$50', 'R$50 a R$100', 'Acima de R$100'];
+    const winePriceValues = winePriceKeys.map(k => winePriceCounts[k] || 0);
+    
+    charts.winePrice = new Chart(document.getElementById('chart-wine-price'), {
       type: 'bar',
       data: {
-        labels: beerKeys,
+        labels: winePriceKeys,
         datasets: [{
           label: 'Votos',
-          data: beerValues,
-          backgroundColor: ['#10b981', '#06b6d4', '#f59e0b', '#ef4444'],
+          data: winePriceValues,
+          backgroundColor: ['#10b981', '#6366f1', '#8b5cf6', '#f59e0b', '#fb923c', '#e11d48'],
           borderRadius: 8
         }]
       },
@@ -801,8 +950,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    // E) Promo interest (Doughnut)
-    const promoCounts = countValues(dataset, 'q11_promo_interest');
+    // F) Promo interest (Doughnut)
+    const promoCounts = countValues(dataset, 'q12_promo_interest');
     charts.promoInterest = new Chart(document.getElementById('chart-promo-interest'), {
       type: 'doughnut',
       data: {
@@ -823,7 +972,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    // F) Sectors (Horizontal Bar)
+    // G) Sectors (Horizontal Bar)
     const sectorCounts = countArrayValues(dataset, 'q3_sectors');
     const sortedSectors = Object.entries(sectorCounts).sort((a,b) => b[1] - a[1]);
     charts.sectors = new Chart(document.getElementById('chart-sectors'), {
@@ -849,13 +998,13 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    // G) Cold Items (Horizontal Bar)
-    const coldCounts = countArrayValues(dataset, 'q16_cold_items');
+    // H) Cold Items (Horizontal Bar)
+    const coldCounts = countArrayValues(dataset, 'q17_cold_items');
     
     // Add custom "Others" responses to the count if any
     let otherColdCount = 0;
     dataset.forEach(r => {
-      if (r.q16_cold_other && r.q16_cold_other.trim() !== '') {
+      if (r.q17_cold_other && r.q17_cold_other.trim() !== '') {
         otherColdCount++;
       }
     });
@@ -889,9 +1038,10 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function renderEmptyCharts() {
-    const ctxs = ['chart-frequency', 'chart-prices', 'chart-supply', 'chart-beers', 'chart-promo-interest', 'chart-sectors', 'chart-cold-items'];
+    const ctxs = ['chart-frequency', 'chart-prices', 'chart-supply', 'chart-beers', 'chart-wine-price', 'chart-promo-interest', 'chart-sectors', 'chart-cold-items'];
     ctxs.forEach(id => {
       const el = document.getElementById(id);
+      if (!el) return;
       const ctx = el.getContext('2d');
       ctx.clearRect(0, 0, el.width, el.height);
       ctx.fillStyle = '#94a3b8';
@@ -901,7 +1051,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Render Feedbacks lists (Q4, Q9, Q17)
+  // Render Feedbacks lists (Q4, Q9, Q18)
   function renderFeedbacks(dataset) {
     const listLack = document.getElementById('list-lack');
     const listExternal = document.getElementById('list-external');
@@ -938,10 +1088,11 @@ document.addEventListener('DOMContentLoaded', () => {
         externalCount++;
       }
 
-      // Q17 General comments & suggestion
-      if (r.q17_feedback && r.q17_feedback.trim() !== '') {
+      // Q18 General comments & suggestion (with legacy compatibility check)
+      const feedbackText = r.q18_feedback || r.q17_feedback;
+      if (feedbackText && feedbackText.trim() !== '') {
         const li = document.createElement('li');
-        li.innerHTML = `<span class="meta-date">${dateStr}</span><p><strong>[${escapeHTML(r.q1_store)}]</strong> ${escapeHTML(r.q17_feedback)}</p>`;
+        li.innerHTML = `<span class="meta-date">${dateStr}</span><p><strong>[${escapeHTML(r.q1_store)}]</strong> ${escapeHTML(feedbackText)}</p>`;
         listFeedback.appendChild(li);
         feedbackCount++;
       }
@@ -984,15 +1135,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const stores = ['Acquarela', 'Barcas', 'CHAS', 'Jardine', 'Serrambi 2', 'Ecoville 1', 'Sun Towers'];
     const freqs = ['Todos os dias', '3 a 5 vezes por semana', '1 a 2 vezes por semana', 'Raramente'];
     const sectors = ['Bebidas', 'Cervejas', 'Sorvetes', 'Congelados', 'Snacks', 'Doces', 'Produtos básicos do dia a dia', 'Higiene/Limpeza'];
-    const prices = ['Muito bons', 'Justos', 'Um pouco altos', 'Altos demais'];
     const seeMores = ['Produtos fitness', 'Congelados rápidos', 'Bebidas geladas', 'Cervejas especiais', 'Produtos infantis', 'Café da manhã', 'Doces e chocolates', 'Produtos premium', 'Itens baratos do dia a dia'];
     const hours = ['Manhã', 'Tarde', 'Noite', 'Madrugada'];
-    const supplies = ['Sempre', 'Na maioria das vezes', 'Às vezes faltam produtos', 'Frequentemente encontro produtos em falta'];
-    const beersVal = ['Excelente', 'Boa', 'Pode melhorar', 'Fraca'];
+    const favoritesList = ['Dindim Gourmet', 'Marmitas congeladas', 'Pastel Dom Coutinho', 'Cacau Show', 'Batata Chips Caipira', 'Barra Whey Ovomaltine', 'Kinder Bueno', 'Pudim no Copo', 'Crepe'];
+    const wineTypesList = ['Tinto', 'Branco', 'Espumante Brut', 'Espumante Moscatel', 'Rosé', 'Outro'];
+    const winePricesList = ['Até R$20', 'R$20 a R$30', 'R$30 a R$40', 'R$40 a R$50', 'R$50 a R$100', 'Acima de R$100'];
     const promosVal = ['Sim', 'Talvez', 'Não faz diferença'];
     const promoTypes = ['Combo cerveja + snack', 'Desconto progressivo', 'Promoção relâmpago', 'Produtos do dia', 'Combos família', 'Sorvete em promoção'];
     const convenients = ['Sim, muito', 'Sim', 'Mais ou menos', 'Pouco'];
-    const recommends = ['Sim', 'Talvez', 'Não'];
     const colds = ['Energético', 'Isotônico', 'Água', 'Café gelado', 'Refrigerante específico', 'Long necks', 'Sobremesas'];
 
     const itemsFaltaList = [
@@ -1006,7 +1156,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const itemsCompradosFora = [
       'Pão francês quentinho', 'Carne fresca / Bife', 'Fralda descartável infantil',
       'Legumes e Verduras frescas', 'Queijo muçarela fatiado', 'Água sanitária de 2 litros',
-      'Sorvete de massa pote grande', 'Cerveja Heineken lata mais barata', 'Carvão vegetal bag'
+      'Sorvete de massa pote grande', 'Cerveja Spaten lata mais barata', 'Carvão vegetal bag'
     ];
 
     const feedbacksList = [
@@ -1015,14 +1165,14 @@ document.addEventListener('DOMContentLoaded', () => {
       'Muito prático! Adoraria se tivesse um terminal de pão francês que reabastecesse de manhã cedo.',
       'Excelente iniciativa da pesquisa. O minimercado é ótimo, mas o preço dos snacks podia ser melhor.',
       'Adoro fazer compras na madrugada quando volto do trabalho. Sempre limpo e iluminado. Parabéns!',
-      'Gostaria de ver marcas melhores de vinho na prateleira. Às vezes só tem vinho nacional simples.',
+      'Gostaria de ver marcas melhores de vinho na prateleira. Adorei a nova seção de vinhos!',
       'Faltam opções saudáveis e whey pronto gelado na geladeira para quem treina à noite.'
     ];
 
     const mockDataList = [];
 
     for (let i = 0; i < count; i++) {
-      const q14 = randomNPSScore();
+      const q15 = randomNPSScore();
       
       // Random dates in the last 7 days
       const daysAgo = Math.floor(Math.random() * 7);
@@ -1035,8 +1185,14 @@ document.addEventListener('DOMContentLoaded', () => {
       // Random sets
       const chosenSectors = selectRandomElements(sectors, 1, 4);
       const chosenSeeMore = selectRandomElements(seeMores, 1, 3);
+      const chosenFavorites = selectRandomElements(favoritesList, 1, 3);
       const chosenPromoType = selectRandomElements(promoTypes, 1, 2);
       const chosenCold = selectRandomElements(colds, 1, 3);
+
+      // We'll sometimes include Outros in favorites
+      if (Math.random() > 0.8) {
+        chosenFavorites.push('Outros');
+      }
 
       mockDataList.push({
         id: 'mock_' + Math.floor(Math.random() * 10000000),
@@ -1045,20 +1201,29 @@ document.addEventListener('DOMContentLoaded', () => {
         q2_freq: randomElement(freqs),
         q3_sectors: chosenSectors,
         q4_lack: Math.random() > 0.4 ? randomElement(itemsFaltaList) : '',
-        q5_prices: randomPriceEvaluation(),
+        
+        // Q5 Aspect ratings (3-5 positive bias, 2-4 prices slightly lower)
+        q5_aspect_variety: Math.floor(Math.random() * 3) + 3,
+        q5_aspect_price: Math.floor(Math.random() * 3) + 2,
+        q5_aspect_organization: Math.floor(Math.random() * 2) + 4,
+        q5_aspect_supply: Math.floor(Math.random() * 3) + 3,
+        
         q6_see_more: chosenSeeMore,
         q7_hour: randomElement(hours),
-        q8_supplied: randomElement(supplies),
+        
+        q8_favorites: chosenFavorites.filter(x => x !== 'Outros'),
+        q8_favorites_other: chosenFavorites.includes('Outros') ? 'Dindim sabor Coco Queimado' : '',
+        
         q9_external: Math.random() > 0.5 ? randomElement(itemsCompradosFora) : '',
-        q10_beers: randomElement(beersVal),
-        q11_promo_interest: randomElement(promosVal),
-        q12_promo_type: chosenPromoType,
-        q13_convenient: randomElement(convenients),
-        q14_rating: q14,
-        q15_nps_recommend: q14 >= 8 ? 'Sim' : (q14 >= 6 ? 'Talvez' : 'Não'),
-        q16_cold_items: chosenCold,
-        q16_cold_other: Math.random() > 0.8 ? 'Cerveja IPA de marca local' : '',
-        q17_feedback: Math.random() > 0.65 ? randomElement(feedbacksList) : ''
+        q10_wine_type: randomElement(wineTypesList),
+        q11_wine_price: randomElement(winePricesList),
+        q12_promo_interest: randomElement(promosVal),
+        q13_promo_type: chosenPromoType,
+        q14_convenient: randomElement(convenients),
+        q15_rating: q15,
+        q16_nps_recommend: q15 >= 8 ? 'Sim' : (q15 >= 6 ? 'Talvez' : 'Não'),
+        q17_cold_items: chosenCold,
+        q18_feedback: Math.random() > 0.65 ? randomElement(feedbacksList) : ''
       });
     }
 
@@ -1074,14 +1239,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (rand < 0.92) return 7;
     if (rand < 0.96) return 6;
     return Math.floor(Math.random() * 6); // 0 to 5
-  }
-
-  function randomPriceEvaluation() {
-    const rand = Math.random();
-    if (rand < 0.1) return 'Muito bons';
-    if (rand < 0.65) return 'Justos';
-    if (rand < 0.9) return 'Um pouco altos';
-    return 'Altos demais';
   }
 
   function randomElement(arr) {
@@ -1106,12 +1263,14 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       const headers = [
-        'ID', 'Data Hora', 'Loja', 'Frequência de Visita', 'Setores Utilizados',
-        'O que sente falta', 'Avaliação de Preços', 'Deseja ver mais de',
-        'Horário de preferência', 'Opinião Abastecimento', 'Produto comprado externo',
-        'Variedade Cervejas', 'Se importa com Promoções', 'Tipos de Promoções preferidas',
-        'Conveniente para saídas rápidas', 'Nota Geral (0-10)', 'Indicaria para condomínios',
-        'Deseja Gelados', 'Deseja Gelados Outros', 'Sugestões Livres'
+        'ID da Resposta', 'Data e Hora', 'Loja', 'Frequência de Visita', 'Setores Mais Utilizados',
+        'O que mais sente falta', 'Avaliação - Variedade', 'Avaliação - Preço', 
+        'Avaliação - Organização', 'Avaliação - Abastecimento', 'Deseja ver mais de',
+        'Horário que mais compra', 'Produtos Favoritos', 'Produtos Favoritos (Outros)',
+        'Compra fora do condomínio', 'Tipo de Vinho mais consumido', 'Preço médio do Vinho',
+        'Compraria com Promoções', 'Promoções que chamam atenção',
+        'Conveniente para saídas rápidas', 'Nota do Minimercado (0-10)', 'Indicaria para outros condomínios',
+        'Deseja Gelados no Freezer', 'Sugestões Livres de Melhoria'
       ];
 
       const rows = responses.map(r => [
@@ -1121,20 +1280,24 @@ document.addEventListener('DOMContentLoaded', () => {
         r.q2_freq || '',
         (r.q3_sectors || []).join('; '),
         r.q4_lack || '',
-        r.q5_prices || '',
+        r.q5_aspect_variety !== undefined ? r.q5_aspect_variety : '',
+        r.q5_aspect_price !== undefined ? r.q5_aspect_price : '',
+        r.q5_aspect_organization !== undefined ? r.q5_aspect_organization : '',
+        r.q5_aspect_supply !== undefined ? r.q5_aspect_supply : '',
         (r.q6_see_more || []).join('; '),
         r.q7_hour || '',
-        r.q8_supplied || '',
+        (r.q8_favorites || []).join('; '),
+        r.q8_favorites_other || '',
         r.q9_external || '',
-        r.q10_beers || '',
-        r.q11_promo_interest || '',
-        (r.q12_promo_type || []).join('; '),
-        r.q13_convenient || '',
-        r.q14_rating !== undefined ? r.q14_rating : '',
-        r.q15_nps_recommend || '',
-        (r.q16_cold_items || []).join('; '),
-        r.q16_cold_other || '',
-        r.q17_feedback || ''
+        r.q10_wine_type || '',
+        r.q11_wine_price || '',
+        r.q12_promo_interest || '',
+        (r.q13_promo_type || []).join('; '),
+        r.q14_convenient || '',
+        r.q15_rating !== undefined ? r.q15_rating : '',
+        r.q16_nps_recommend || '',
+        (r.q17_cold_items || []).join('; '),
+        r.q18_feedback || r.q17_feedback || ''
       ]);
 
       // CSV format assembly (semi-colon separated for Brazilian Excel standard compatibility)
@@ -1259,20 +1422,24 @@ document.addEventListener('DOMContentLoaded', () => {
       q2_freq: 'Todos os dias',
       q3_sectors: ['Bebidas', 'Cervejas'],
       q4_lack: 'PRODUTO TESTE DE CONEXÃO',
-      q5_prices: 'Justos',
+      q5_aspect_variety: 5,
+      q5_aspect_price: 4,
+      q5_aspect_organization: 5,
+      q5_aspect_supply: 4,
       q6_see_more: ['Produtos fitness'],
       q7_hour: 'Noite',
-      q8_supplied: 'Sempre',
+      q8_favorites: ['Dindim Gourmet', 'Cacau Show'],
+      q8_favorites_other: 'Outro doce',
       q9_external: 'Item de teste',
-      q10_beers: 'Excelente',
-      q11_promo_interest: 'Sim',
-      q12_promo_type: ['Desconto progressivo'],
-      q13_convenient: 'Sim, muito',
-      q14_rating: 10,
-      q15_nps_recommend: 'Sim',
-      q16_cold_items: ['Água'],
-      q16_cold_other: '',
-      q17_feedback: 'Teste de conexão efetuado com sucesso a partir do painel admin.'
+      q10_wine_type: 'Tinto',
+      q11_wine_price: 'R$30 a R$40',
+      q12_promo_interest: 'Sim',
+      q13_promo_type: ['Desconto progressivo'],
+      q14_convenient: 'Sim, muito',
+      q15_rating: 10,
+      q16_nps_recommend: 'Sim',
+      q17_cold_items: ['Água'],
+      q18_feedback: 'Teste de conexão efetuado com sucesso a partir do painel admin.'
     };
 
     fetch(url, {
