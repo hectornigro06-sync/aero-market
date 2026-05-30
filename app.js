@@ -341,15 +341,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const grid = card.querySelector('.options-grid');
     const selectedOptions = grid.querySelectorAll('.option-card.selected');
 
-    if (stepIndex === 12) {
-      // Gelados (Q12, was step 17): selected cards
-      if (selectedOptions.length === 0) {
-        if (validationMsg) validationMsg.style.display = 'block';
-        return false;
-      }
-      return true;
-    }
-
     // Default choice screens
     if (selectedOptions.length === 0) {
       if (validationMsg) validationMsg.style.display = 'block';
@@ -422,8 +413,8 @@ document.addEventListener('DOMContentLoaded', () => {
       // Question 16: Indicaria (now Step 17)
       q16_nps_recommend: getSelectedValue(17),
       
-      // Question 17: Gelados (now Step 12)
-      q17_cold_items: getSelectedValues(12),
+      // Question 17: Fatores de Influência (now Step 12)
+      q12_influence_factor: getSelectedValue(12),
       
       // Question 18: Sugestão livre
       q18_feedback: document.getElementById('q16-feedback').value.trim()
@@ -1024,40 +1015,24 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    // H) Cold Items (Horizontal Bar)
-    const coldCounts = countArrayValues(dataset, 'q17_cold_items');
-    
-    // Add custom "Others" responses to the count if any
-    let otherColdCount = 0;
-    dataset.forEach(r => {
-      if (r.q17_cold_other && r.q17_cold_other.trim() !== '') {
-        otherColdCount++;
-      }
-    });
-    if (otherColdCount > 0) {
-      coldCounts['Outros Escritos'] = otherColdCount;
-    }
-
-    const sortedCold = Object.entries(coldCounts).sort((a,b) => b[1] - a[1]);
+    // H) Fatores de Influência (Doughnut Chart, was Gelados)
+    const influenceCounts = countValues(dataset, 'q12_influence_factor');
     charts.coldItems = new Chart(document.getElementById('chart-cold-items'), {
-      type: 'bar',
+      type: 'doughnut',
       data: {
-        labels: sortedCold.map(x => x[0]),
+        labels: Object.keys(influenceCounts),
         datasets: [{
-          label: 'Desejam Gelado',
-          data: sortedCold.map(x => x[1]),
-          backgroundColor: '#06b6d4',
-          borderRadius: 8
+          data: Object.values(influenceCounts),
+          backgroundColor: ['#6366f1', '#10b981', '#f59e0b', '#06b6d4'],
+          borderColor: isDark ? '#1e293b' : '#ffffff',
+          borderWidth: 2
         }]
       },
       options: {
-        indexAxis: 'y',
         responsive: true,
         maintainAspectRatio: false,
-        plugins: { legend: { display: false } },
-        scales: {
-          x: { grid: { color: gridColor }, ticks: { precision: 0 } },
-          y: { grid: { display: false } }
+        plugins: {
+          legend: { position: 'bottom', labels: { boxWidth: 12, padding: 15 } }
         }
       }
     });
@@ -1169,7 +1144,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const promosVal = ['Sim', 'Talvez', 'Não faz diferença'];
     const promoTypes = ['Combo cerveja + snack', 'Desconto progressivo', 'Promoção relâmpago', 'Produtos do dia', 'Combos família', 'Sorvete em promoção'];
     const convenients = ['Sim, muito', 'Sim', 'Mais ou menos', 'Pouco'];
-    const colds = ['Energético', 'Isotônico', 'Água', 'Café gelado', 'Refrigerante específico', 'Long necks', 'Sobremesas'];
+    const influencesList = [
+      'A marca e a qualidade do produto',
+      'O preço mais baixo, independentemente da marca',
+      'A necessidade do momento',
+      'Novidades e produtos diferentes disponíveis'
+    ];
 
     const itemsFaltaList = [
       'Pão integral da marca Wickbold', 'Iogurte grego zero lactose', 'Suco de uva integral 1L',
@@ -1213,7 +1193,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const chosenSeeMore = selectRandomElements(seeMores, 1, 3);
       const chosenFavorites = selectRandomElements(favoritesList, 1, 3);
       const chosenPromoType = selectRandomElements(promoTypes, 1, 2);
-      const chosenCold = selectRandomElements(colds, 1, 3);
 
       // We'll sometimes include Outros in favorites
       if (Math.random() > 0.8) {
@@ -1248,7 +1227,7 @@ document.addEventListener('DOMContentLoaded', () => {
         q14_convenient: randomElement(convenients),
         q15_rating: q15,
         q16_nps_recommend: q15 >= 8 ? 'Sim' : (q15 >= 6 ? 'Talvez' : 'Não'),
-        q17_cold_items: chosenCold,
+        q12_influence_factor: randomElement(influencesList),
         q18_feedback: Math.random() > 0.65 ? randomElement(feedbacksList) : ''
       });
     }
@@ -1296,7 +1275,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'Compra fora do condomínio', 'Tipo de Vinho mais consumido', 'Preço médio do Vinho',
         'Compraria com Promoções', 'Promoções que chamam atenção',
         'Conveniente para saídas rápidas', 'Nota do Minimercado (0-10)', 'Indicaria para outros condomínios',
-        'Deseja Gelados no Freezer', 'Sugestões Livres de Melhoria'
+        'O que mais influencia a escolha', 'Sugestões Livres de Melhoria'
       ];
 
       const rows = responses.map(r => [
@@ -1322,7 +1301,7 @@ document.addEventListener('DOMContentLoaded', () => {
         r.q14_convenient || '',
         r.q15_rating !== undefined ? r.q15_rating : '',
         r.q16_nps_recommend || '',
-        (r.q17_cold_items || []).join('; '),
+        r.q12_influence_factor || '',
         r.q18_feedback || r.q17_feedback || ''
       ]);
 

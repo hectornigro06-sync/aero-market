@@ -110,7 +110,7 @@ function doGet(e) {
       data.q14_convenient = row[19];
       data.q15_rating = row[20] !== "" ? Number(row[20]) : "";
       data.q16_nps_recommend = row[21];
-      data.q17_cold_items = row[22] ? String(row[22]).split("; ") : [];
+      data.q12_influence_factor = row[22];
       data.q18_feedback = row[23];
       
       jsonArray.push(data);
@@ -169,7 +169,7 @@ function doPost(e) {
         "Conveniente para saídas rápidas", 
         "Nota do Minimercado (0-10)", 
         "Indicaria para outros condomínios", 
-        "Deseja Gelados no Freezer", 
+        "O que mais influencia a escolha", 
         "Sugestões Livres de Melhoria"
       ];
       sheet.appendRow(headers);
@@ -217,7 +217,7 @@ function doPost(e) {
       data.q14_convenient || "",
       data.q15_rating !== undefined ? data.q15_rating : "",
       data.q16_nps_recommend || "",
-      Array.isArray(data.q17_cold_items) ? data.q17_cold_items.join("; ") : (data.q17_cold_items || ""),
+      data.q12_influence_factor || "",
       data.q18_feedback || ""
     ];
     
